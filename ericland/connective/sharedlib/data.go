@@ -24,7 +24,7 @@ type LibSharedItem struct {
 }
 
 var sharedItems map[LibSharedID]LibSharedItem
-var sharedItemsNextId LibSharedID = 0
+var sharedItemsNextId LibSharedID = 1
 
 var globalLock *sync.Mutex
 
