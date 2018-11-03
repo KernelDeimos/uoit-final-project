@@ -1,5 +1,6 @@
 from ctypes import cdll, c_int, c_ulonglong, c_char_p
 
+import time
 import json
 
 # === load library
@@ -32,6 +33,19 @@ ll.elconn_list_print(resultID)
 
 # == Manual Test 2 == Connecting to remote interpreter
 ll.elconn_serve_remote(b":3003", interpID)
+time.sleep(1)
 remoteID = ll.elconn_connect_remote(b"http://localhost:3003")
+rResultID = ll.elconn_call(remoteID, listID)
+ll.elconn_list_print(rResultID)
+
+# == Manual Test 3 == Value on server
+someList = json.dumps([":", "test-var", ["store", "hello", 1]])
+listID = ll.elconn_list_from_json(someList.encode())
+resultID = ll.elconn_call(interpID, listID)
+
+someList = json.dumps(["format", "%s there %f", ["test-var"]])
+listID = ll.elconn_list_from_json(someList.encode())
+resultID = ll.elconn_call(remoteID, listID)
+
 rResultID = ll.elconn_call(remoteID, listID)
 ll.elconn_list_print(rResultID)
