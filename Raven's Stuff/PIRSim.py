@@ -1,5 +1,5 @@
 import json
-#import RPi.GPIO as GPIO
+#import gpiozero as GPIO
 import time
 import random
 
