@@ -14,11 +14,13 @@ bus = smbus2.SMBus(0) #initialize i2c connection for data intake
 def temperature():
     currentTemp = bus.read_byte_data(tempAddress, ?) #register param will depend
                                                   #on where coming from on bus
-    return currentTemp
+    temperature = int.from_bytes(currentTemp, byteorder="little")
+    return temperature
 
 def humidity():
     currentHum = bus.read_byte_data(humAddress, ?)
-    return currentHum
+    humidity = int.from_bytes(currentHum, byteorder="little")
+    return humidity
 
 def occupancyUp():
     occupantcount = 0
