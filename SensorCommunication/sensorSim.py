@@ -4,10 +4,10 @@ import time
 def temperature(temperature):
     chance = random.randint(0, 5)
     if chance == 3:
-        temperature += .1
+        temperature += .5
         return temperature
     if chance == 4:
-        temperature -= .1
+        temperature -= .5
         return temperature
     else:
         return temperature
@@ -15,10 +15,10 @@ def temperature(temperature):
 def humidity(humidity):
     chance = random.randint(0, 5)
     if chance == 3:
-        humidity += .1
+        humidity += .5
         return humidity
     if chance == 4:
-        humidity -= .1
+        humidity -= .5
         return humidity
     else:
         return humidity
