@@ -87,7 +87,7 @@ The default interpreter contains the following keywords when created:
 - The `@` keyword creates a data structure. Data structures are always an
   `Operation` type, so they can be assigned to names using `:`
   - Usage: `@ <type>`
-  - Example (JSON): `[":", "mydir", ["@", "directory"]]
+  - Example (JSON): `[":", "mydir", ["@", "directory"]]`
   - Each value for `<type>` is defined under Data Structures
 - Builtin functions like `format`, `cat`, and more
   (out of the scope of this document)
@@ -134,7 +134,7 @@ The return value is the ID of a debug message. (type Debug)
 
 Parse a JSON string and report an ItemID referring to an object of type List.
 
-This function, and the one following, form the primary API to convert between
+This function, and the two following, form the primary API to convert between
 data types from this library and data types native to the calling language.
 
 If a JSON object or scalar is passed instead of a list, the result is undefined.
