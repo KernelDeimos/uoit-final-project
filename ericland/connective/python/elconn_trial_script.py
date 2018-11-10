@@ -3,6 +3,14 @@ from ctypes import cdll, c_int, c_ulonglong, c_char_p
 import time
 import json
 
+import thread
+
+def runList(ll, interpID, inputList):
+    strList = json.dumps(inputList)
+    listID = ll.elconn_list_from_json(strList.encode())
+    resultID = ll.elconn_call(interpID, listID)
+    return resultID
+
 # === load library
 ll = cdll.LoadLibrary("../sharedlib/elconn.so")
 
@@ -49,3 +57,26 @@ resultID = ll.elconn_call(remoteID, listID)
 
 rResultID = ll.elconn_call(remoteID, listID)
 ll.elconn_list_print(rResultID)
+
+# == Manual Test 3 == Directory with value on server
+runList(ll, interpID, [":", "test-map", ["@", "directory"]])
+runList(ll, interpID, ["test-map", ":", "a", ["store", "test value 2"]])
+
+resID = runList(ll, remoteID, ["test-map", "a"])
+ll.elconn_list_print(resID)
+
+# == Manual Test 5 == Request queue
+runList(ll, interpID, ["test-map", ":", "b", ["@", "requests"]])
+runList(ll, interpID, ["test-map", "b", "enque", "[\"some_json\"]"])
+resID = runList(ll, remoteID, ["test-map", "b", "block"])
+ll.elconn_list_print(resID)
+
+# -- schedule something to be enqueued later
+def do_the_thing(ll, interpID, item, delay):
+    time.sleep(delay)
+    runList(ll, interpID, ["test-map", "b", "enque", item])
+thread.start_new_thread(do_the_thing, (ll, interpID, "test-thread", 4))
+
+print("Wait 4 seconds...")
+resID = runList(ll, remoteID, ["test-map", "b", "block"])
+ll.elconn_list_print(resID)
