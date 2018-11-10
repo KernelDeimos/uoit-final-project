@@ -21,6 +21,8 @@ ll.elconn_list_from_json.restype = c_ulonglong
 ll.elconn_make_interpreter.restype = c_ulonglong
 ll.elconn_call.restype = c_ulonglong
 ll.elconn_connect_remote.restype = c_ulonglong
+ll.elconn_list_strfirst.restype = c_char_p
+ll.elconn_list_to_json.restype = c_char_p
 
 # === set argument types
 ll.elconn_list_from_json.argtypes = [c_char_p]
@@ -80,3 +82,11 @@ thread.start_new_thread(do_the_thing, (ll, interpID, "test-thread", 4))
 print("Wait 4 seconds...")
 resID = runList(ll, remoteID, ["test-map", "b", "block"])
 ll.elconn_list_print(resID)
+
+# == Maual Test 6 == Getting values
+someList = json.dumps(["format", "%s there %f", ["test-var"]])
+listID = ll.elconn_list_from_json(someList.encode())
+firstStr = ll.elconn_list_strfirst(listID)
+print("firstStr = %s" % firstStr)
+asJSON   = ll.elconn_list_to_json(listID)
+print("asJSON = %s" % asJSON)
