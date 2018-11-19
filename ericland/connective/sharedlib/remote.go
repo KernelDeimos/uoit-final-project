@@ -25,9 +25,7 @@ func elconn_serve_remote(addr *C.char, opID LibSharedID) int32 {
 	addrStr := C.GoString(addr)
 
 	// Dereference caller inputs
-	op := interp_a.Operation(
-		(*opInterface).(func([]interface{}) ([]interface{}, error)),
-	)
+	op := (*opInterface).(interp_a.Operation)
 
 	router := gin.Default()
 	router.POST("/call", func(c *gin.Context) {
@@ -116,7 +114,7 @@ func elconn_connect_remote(addr *C.char) LibSharedID {
 	}
 
 	var opInterface interface{}
-	opInterface = op
+	opInterface = interp_a.Operation(op)
 
 	id := AddSharedItem(LibSharedTypeAPI, &opInterface)
 	return id

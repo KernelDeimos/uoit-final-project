@@ -12,7 +12,10 @@ func elconn_make_interpreter() LibSharedID {
 
 	// Evaluate function must by in an empty interface to take reference
 	var op interface{}
-	op = evaluator.OpEvaluate
+	op = interp_a.Operation(evaluator.OpEvaluate)
+
+	// Add data structure factory
+	evaluator.AddOperation("@", makeDataStructureFactory())
 
 	// Share evaluate function with library caller
 	id := AddSharedItem(LibSharedTypeAPI, &op)
@@ -34,9 +37,7 @@ func elconn_call(inOpID LibSharedID, inListID LibSharedID) LibSharedID {
 	}
 
 	// Dereference caller inputs
-	inOp := interp_a.Operation(
-		(*opInterface).(func([]interface{}) ([]interface{}, error)),
-	)
+	inOp := (*opInterface).(interp_a.Operation)
 	inList := (*listInterface).([]interface{})
 
 	// Run the specified operation with the specified input list
