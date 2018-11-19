@@ -5,10 +5,11 @@ from gpiozero import MotionSensor #provides methods for easy use PIR
 
 tempAddress = 0x?? #will be different when configured
                #represents i2c addy from sensor taking in temp when read
-               #using i2cdetect -y 0
+               #using i2cdetect -y 1
 humAddress = 0x??
-bus = smbus2.SMBus(0) #initialize i2c connection for data intake
-
+bus = smbus2.SMBus(1) #initialize i2c connection for data intake
+		#bus reference at 1 instead of 0 on new raspberry pi (post gen 2)
+		#references /dev/ttyUSB1
 
 
 def temperature():
