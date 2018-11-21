@@ -13,4 +13,4 @@ temperature: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f temperature $(OBJ) 
+	rm -f temperature $(OBJ)
