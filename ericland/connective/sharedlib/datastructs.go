@@ -1,7 +1,12 @@
 package main
 
 import (
+	"crypto/sha1"
 	"errors"
+	"sort"
+
+	"github.com/satori/go.uuid"
+
 	"github.com/KernelDeimos/anything-gos/interp_a"
 )
 
@@ -78,4 +83,149 @@ func (rq RequestQueue) OpEnqueue(args []interface{}) ([]interface{}, error) {
 func (rq RequestQueue) OpDequeueBlk(args []interface{}) ([]interface{}, error) {
 	value := <-rq.Chan
 	return []interface{}{value}, nil
+}
+
+type HashGraph struct {
+	// All nodes of graph, including "meta nodes" for links
+	Nodes map[string]interface{}
+
+	// List of nodes that are not meta nodes for links
+	VisibleNodes map[string]struct{}
+
+	// First key is a node on one side of the link
+	// (so a link will have two entries)
+	// Second key is the "meta node" for the link
+	Links map[string]map[string]struct{}
+}
+
+func (hg *HashGraph) AddLink(nodeKey, linkKey string) {
+	links, exists := hg.Links[nodeKey]
+	if !exists {
+		links = map[string]struct{}{}
+	}
+	links[linkKey] = struct{}{}
+	hg.Links[nodeKey] = links
+}
+
+func (hg *HashGraph) OpAdd(args []interface{}) ([]interface{}, error) {
+	for _, arg := range args {
+		// Determine key
+		var key string
+		switch a := arg.(type) {
+		case string:
+			k := sha1.Sum([]byte(a))
+			key = string(k[:])
+		case []byte:
+			k := sha1.Sum(a)
+			key = string(k[:])
+		default:
+			uuid, err := uuid.NewV4()
+			if err != nil {
+				return []interface{}{}, err
+			}
+			key = uuid.String()
+		}
+
+		hg.Nodes[key] = arg
+		hg.VisibleNodes[key] = struct{}{}
+	}
+	return []interface{}{}, nil
+}
+
+func (hg *HashGraph) OpLink(args []interface{}) ([]interface{}, error) {
+	// Verify parameters (code below is generated using genfor-interp-a)
+	//::gen verify-args link keyA string keyB string value interface{}
+	if len(args) < 3 {
+		return nil, errors.New("link requires at least 3 arguments")
+	}
+
+	var keyA string
+	var keyB string
+	var value interface{}
+	{
+		var ok bool
+		keyA, ok = args[0].(string)
+		if !ok {
+			return nil, errors.New("link: argument 0: keyA; must be type string")
+		}
+		keyB, ok = args[1].(string)
+		if !ok {
+			return nil, errors.New("link: argument 1: keyB; must be type string")
+		}
+		value, ok = args[2].(interface{})
+		if !ok {
+			return nil, errors.New("link: argument 2: value; must be type interface{}")
+		}
+	}
+	//::end
+
+	// Sort keys
+	keys := []string{keyA, keyB}
+	sort.Strings(keys)
+	keyA = keys[0]
+	keyB = keys[1]
+
+	hashBytes := sha1.Sum([]byte(keyA + "." + keyB))
+	hash := string(hashBytes[:])
+
+	// Add link
+	hg.Nodes[hash] = value
+	hg.AddLink(keyA, hash)
+	hg.AddLink(keyB, hash)
+
+	return []interface{}{}, nil
+}
+
+func (hg *HashGraph) OpGetNodes(args []interface{}) ([]interface{}, error) {
+	ii := []interface{}{}
+	for _, key := range hg.VisibleNodes {
+		ii = append(ii, key)
+	}
+	return ii, nil
+}
+
+func (hg *HashGraph) OpGet(args []interface{}) ([]interface{}, error) {
+	//::gen verify-args get key string
+	if len(args) < 1 {
+		return nil, errors.New("get requires at least 1 arguments")
+	}
+
+	var key string
+	{
+		var ok bool
+		key, ok = args[0].(string)
+		if !ok {
+			return nil, errors.New("get: argument 0: key; must be type string")
+		}
+	}
+	//::end
+	ii := []interface{}{}
+	ii = append(ii, hg.Nodes[key])
+	return ii, nil
+}
+
+func (hg *HashGraph) OpGetLinks(args []interface{}) ([]interface{}, error) {
+	//::gen verify-args get-links key string
+	if len(args) < 1 {
+		return nil, errors.New("get-links requires at least 1 arguments")
+	}
+
+	var key string
+	{
+		var ok bool
+		key, ok = args[0].(string)
+		if !ok {
+			return nil, errors.New("get-links: argument 0: key; must be type string")
+		}
+	}
+	//::end
+
+	links, _ := hg.Links[key]
+
+	ii := []interface{}{}
+	for link := range links {
+		ii = append(ii, link)
+	}
+
+	return ii, nil
 }
