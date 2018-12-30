@@ -1,13 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/chzyer/readline"
 	"io"
 	"os"
 
+	"github.com/chzyer/readline"
 	"github.com/sirupsen/logrus"
+
+	"github.com/KernelDeimos/gottagofast/toolparse"
+
+	"group23.local/ericland/anything/interpreter"
 )
 
 var logo = `
@@ -26,6 +31,7 @@ Usage:
 `
 
 func main() {
+	logrus.SetLevel(logrus.DebugLevel)
 
 	argPtrFile := flag.String("file", "", "A script file")
 	argPtrDebug := flag.Bool("debug", false, "Enable debug mode")
@@ -53,7 +59,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	statEndl := "-\033[0m-\n"
+	ifa := interpreter.InterpreterFactoryA{}
+	exec := ifa.MakeExec()
+
+	statEndl := "-\033[0m-"
 
 	for {
 		statExit := "\033[32;1mOK\033[0m"
@@ -73,7 +82,20 @@ func main() {
 			logrus.Error(err)
 		}
 		input = fmt.Sprintf("%s", input)
-		fmt.Println("user input: ", input)
+
+		list, err := toolparse.ParseListSimple(input)
+
+		outBytes, _ := json.Marshal(list)
+		logrus.Debug(string(outBytes))
+
+		results, err := exec(list)
+		if err != nil {
+			logrus.Error(err)
+			continue
+		}
+
+		outBytes, err = json.Marshal(results)
+		logrus.Info(string(outBytes))
 	}
 
 }
