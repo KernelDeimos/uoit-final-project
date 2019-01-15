@@ -4,10 +4,13 @@ import (
 	"crypto/sha1"
 	"errors"
 	"sort"
+	"sync"
+	"time"
 
 	"github.com/satori/go.uuid"
 
 	"github.com/KernelDeimos/anything-gos/interp_a"
+	"github.com/KernelDeimos/gottagofast/utiltime"
 )
 
 /*
@@ -30,6 +33,8 @@ func makeDataStructureFactory() interp_a.Operation {
 	// - check   -> report the oldest request or nil
 	// - enque   -> add some data to the request queue (blocking if full queue)
 	makeFunctions.AddOperation("requests", makeDSQueue)
+
+	makeFunctions.AddOperation("heartbeat-monitor", makeDSHeartbeatMonitor)
 
 	return interp_a.Operation(makeFunctions.OpEvaluate)
 }
@@ -61,6 +66,37 @@ func makeDSQueue(args []interface{}) ([]interface{}, error) {
 	// Bind request queue functions to interpreter
 	queue.Bind(empty)
 
+	return []interface{}{interp_a.Operation(empty.OpEvaluate)}, nil
+}
+
+func makeDSHeartbeatMonitor(args []interface{}) ([]interface{}, error) {
+	//::gen verify-args make-heartbeat-monitor timeout time.Duration
+	if len(args) < 1 {
+		return nil, errors.New("make-heartbeat-monitor requires at least 1 arguments")
+	}
+
+	var timeout time.Duration
+	{
+		var ok bool
+		timeout, ok = args[0].(time.Duration)
+		if !ok {
+			return nil, errors.New("make-heartbeat-monitor: argument 0: timeout; must be type time.Duration")
+		}
+	}
+	//::end
+
+	// Create empty interpreter for heartbeat functions
+	empty := interp_a.InterpreterFactoryA{}.MakeEmpty()
+
+	// Create heartbeat monitor data
+	hm := &HeartbeatMonitor{
+		LastBeat: time.Now(),
+		Timeout:  timeout,
+		Mutex:    &sync.RWMutex{},
+	}
+
+	// Bind heartbeat functions to interpreter
+	hm.Bind(empty)
 	return []interface{}{interp_a.Operation(empty.OpEvaluate)}, nil
 }
 
@@ -228,4 +264,103 @@ func (hg *HashGraph) OpGetLinks(args []interface{}) ([]interface{}, error) {
 	}
 
 	return ii, nil
+}
+
+type HeartbeatMonitor struct {
+	// Last time a heartbeat was recieved
+	LastBeat time.Time
+
+	// Callback to trigger when a process appears to be dead
+	DeadFunc interp_a.Operation
+
+	// Amount of time before DeadFunc is triggered after the last heartbeat
+	Timeout time.Duration
+
+	// Ticker for the heartbeat monitor, or nil if the monitor is inactive.
+	// This is exposed to functions outside the monitor because any heartbeat
+	// update should reset the timer to ensure prompt detection of inactivity.
+	Ticker *utiltime.RealTicker
+
+	// RWMutex for heartbeat updates
+	Mutex *sync.RWMutex
+}
+
+func (hm *HeartbeatMonitor) Bind(destination interp_a.HybridEvaluator) {
+	destination.AddOperation("monitor", hm.OpMonitor)
+	destination.AddOperation("beat", hm.OpBeat)
+	destination.AddOperation("is-alive", hm.OpIsAlive)
+	destination.AddOperation("time-since", hm.OpTimeSince)
+}
+
+// OpMonitor starts a heartbeat monitor implementation
+func (hm *HeartbeatMonitor) OpMonitor(args []interface{}) ([]interface{}, error) {
+	//::gen verify-args heartbeat-monitor callback interp_a.Operation
+	if len(args) < 1 {
+		return nil, errors.New("heartbeat-monitor requires at least 1 arguments")
+	}
+
+	var callback interp_a.Operation
+	{
+		var ok bool
+		callback, ok = args[0].(interp_a.Operation)
+		if !ok {
+			return nil, errors.New("heartbeat-monitor: argument 0: callback; must be type interp_a.Operation")
+		}
+	}
+	//::end
+
+	// Set callback for heartbeat timeout
+	hm.DeadFunc = callback
+
+	// Start routine to periodically check heartbeat
+	go func() {
+		hm.Ticker = utiltime.NewRealTicker(hm.Timeout)
+		for {
+			// Wait the duration of one timeout
+			<-hm.Ticker.C
+
+			// Get last beat
+			hm.Mutex.RLock()
+			t := hm.LastBeat
+			hm.Mutex.RUnlock()
+
+			duration := time.Now().Sub(t)
+			if duration >= hm.Timeout {
+				hm.DeadFunc([]interface{}{})
+			}
+		}
+	}()
+
+	return []interface{}{}, nil
+}
+
+func (hm *HeartbeatMonitor) OpBeat(args []interface{}) ([]interface{}, error) {
+	hm.Mutex.Lock()
+	defer hm.Mutex.Unlock()
+	hm.LastBeat = time.Now()
+	hm.Ticker.Reset()
+	return []interface{}{}, nil
+}
+
+func (hm *HeartbeatMonitor) OpIsAlive(args []interface{}) ([]interface{}, error) {
+	hm.Mutex.RLock()
+	t := hm.LastBeat
+	hm.Mutex.RUnlock()
+
+	duration := time.Now().Sub(t)
+	if duration >= hm.Timeout {
+		return []interface{}{false}, nil
+	}
+
+	return []interface{}{true}, nil
+}
+
+func (hm *HeartbeatMonitor) OpTimeSince(args []interface{}) ([]interface{}, error) {
+	hm.Mutex.RLock()
+	t := hm.LastBeat
+	hm.Mutex.RUnlock()
+
+	duration := time.Now().Sub(t)
+
+	return []interface{}{int64(duration / time.Second)}, nil
 }
