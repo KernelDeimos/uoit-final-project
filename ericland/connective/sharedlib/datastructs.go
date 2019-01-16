@@ -70,20 +70,25 @@ func makeDSQueue(args []interface{}) ([]interface{}, error) {
 }
 
 func makeDSHeartbeatMonitor(args []interface{}) ([]interface{}, error) {
-	//::gen verify-args make-heartbeat-monitor timeout time.Duration
+	//::gen verify-args make-heartbeat-monitor timeoutstr string
 	if len(args) < 1 {
 		return nil, errors.New("make-heartbeat-monitor requires at least 1 arguments")
 	}
 
-	var timeout time.Duration
+	var timeoutstr string
 	{
 		var ok bool
-		timeout, ok = args[0].(time.Duration)
+		timeoutstr, ok = args[0].(string)
 		if !ok {
-			return nil, errors.New("make-heartbeat-monitor: argument 0: timeout; must be type time.Duration")
+			return nil, errors.New("make-heartbeat-monitor: argument 0: timeoutstr; must be type string")
 		}
 	}
 	//::end
+
+	timeout, err := time.ParseDuration(timeoutstr)
+	if err != nil {
+		return nil, err
+	}
 
 	// Create empty interpreter for heartbeat functions
 	empty := interp_a.InterpreterFactoryA{}.MakeEmpty()
@@ -338,7 +343,9 @@ func (hm *HeartbeatMonitor) OpBeat(args []interface{}) ([]interface{}, error) {
 	hm.Mutex.Lock()
 	defer hm.Mutex.Unlock()
 	hm.LastBeat = time.Now()
-	hm.Ticker.Reset()
+	if hm.Ticker != nil {
+		hm.Ticker.Reset()
+	}
 	return []interface{}{}, nil
 }
 
