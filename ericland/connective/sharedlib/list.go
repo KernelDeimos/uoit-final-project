@@ -4,6 +4,7 @@ import (
 	"C"
 
 	"encoding/json"
+	"github.com/KernelDeimos/gottagofast/toolparse"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,6 +14,25 @@ func elconn_list_from_json(jsonInputC *C.char) LibSharedID {
 
 	outList := []interface{}{}
 	err := json.Unmarshal([]byte(jsonInput), &outList)
+	if err != nil {
+		logrus.Error(err)
+		return 0
+	}
+
+	var outListInterface interface{}
+	outListInterface = outList
+
+	id := AddSharedItem(LibSharedTypeList, &outListInterface)
+	return id
+}
+
+//export elconn_list_from_text
+func elconn_list_from_text(textInputC *C.char) LibSharedID {
+	textInput := C.GoString(textInputC)
+
+	logrus.Info(textInput)
+
+	outList, err := toolparse.ParseListSimple(textInput)
 	if err != nil {
 		logrus.Error(err)
 		return 0
