@@ -80,6 +80,12 @@ extern GoUint64 elconn_call(GoUint64 p0, GoUint64 p1);
 
 extern GoUint64 elconn_list_from_json(char* p0);
 
+extern GoUint64 elconn_list_from_text(char* p0);
+
+extern char* elconn_list_to_json(GoUint64 p0);
+
+extern char* elconn_list_strfirst(GoUint64 p0);
+
 extern GoInt32 elconn_list_print(GoUint64 p0);
 
 extern GoUint64 elconn_init(GoInt32 p0);

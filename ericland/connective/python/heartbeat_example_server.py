@@ -50,5 +50,5 @@ run(ll, ii, "heartbeats myclient beat")
 
 for x in range (100):
     time.sleep(0.2)
-    result = run(ll, ii, "heartbeats myclient is-alive")
+    result = run(ll, ii, "heartbeats myclient time-since")
     ll.elconn_list_print(result)
