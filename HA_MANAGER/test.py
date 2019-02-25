@@ -16,7 +16,7 @@ def main():
                 "Time Stamp": str(timestamp),
                 "Result": "Literally nothing, this is just a test"
                    })
-        sys.stdout.write(receipt.encode()+"\n")
+        sys.stdout.write(receipt+"\n")
         sys.stdout.flush()
         sleep(5)
         

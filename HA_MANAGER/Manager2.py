@@ -21,21 +21,21 @@ config["Test"] = cmd
 def main():
     # Get Configuration
     print("Accessing configuration file")
-    with open("config.yml", 'r') as stream:
+    with open("./config.yml", 'r') as stream:
         try:
             print(yaml.load(stream))
         except yaml.YAMLError as exc:
-            print(exc)        
+            print(exc)
     # Define system according to configuration
     print("Starting subprocesses")
     for name, cmd in config.items():
         print("Executing process "+name+" with command "+str(cmd))
         process = Module(name, cmd, linebuffer)
         processes.append(process)
-            
+
     # Start Main Loop
     print("Initializing main loop")
-    while True:        
+    while True:
         # TODO: Confirm System State According to Configuration
         for proc in processes:
             status = proc.GetStatus()
@@ -44,7 +44,7 @@ def main():
         # TODO: Monitor System Heartbeat
         # TODO: Eric
         print("Checking Heartbeats (TODO)")
-        
+
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section
         print("Evaluating receipts in buffer")
@@ -68,9 +68,10 @@ def main():
                 break
         # TODO: Handle Failure Recovery
         for proc in recover:
+            print("Restarting process "+proc.GetName())
             proc.Restart()
-        
+
         time.sleep(10) # Included for testing purposes only
-        
+
 if __name__ == "__main__":
     main()
