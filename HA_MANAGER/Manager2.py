@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 import yaml
 import time
 import json
 from Module import Module
+from bindings import new_ll, Interpreter
 
 linebuffer = []
 receipt_list = []
@@ -32,6 +33,20 @@ def main():
         print("Executing process "+name+" with command "+str(cmd))
         process = Module(name, cmd, linebuffer)
         processes.append(process)
+    
+
+    # Init HA/Connective Server
+    ll = new_ll("../ericland/connective/sharedlib/elconn.so")
+    initMsg = ll.elconn_init(0)
+    ll.elconn_display_info(initMsg)
+    connective = new_interpreter(ll)
+    connective.serve_remote(b":3003") # TODO: port from env or config
+
+    # Initialize Management Data Structures
+    connective.runs(": heartbeats (@ directory)")
+
+    # Iniitalize IoT Data Structures
+    # ... TODO
 
     # Start Main Loop
     print("Initializing main loop")
