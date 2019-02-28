@@ -14,7 +14,7 @@ class Interpreter:
         resultID = self.ll.elconn_call(self.ii, listID)
         return resultID
     def serve_remote(self, addr):
-        ll.elconn_serve_remote(addr, self.ii)
+        self.ll.elconn_serve_remote(addr, self.ii)
 
 def new_interpreter(ll):
     ii = ll.elconn_make_interpreter()

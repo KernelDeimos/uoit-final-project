@@ -3,7 +3,7 @@ import yaml
 import time
 import json
 from Module import Module
-from bindings import new_ll, Interpreter
+from bindings import new_ll, new_interpreter
 
 linebuffer = []
 receipt_list = []
