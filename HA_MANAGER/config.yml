@@ -1,3 +1,7 @@
+components:
+  - cmd: ['python', 'test.py']
+    id:  "testpy@0.1"
+    name: "Python Test Program"
 a: 5
 b: 17
 d:

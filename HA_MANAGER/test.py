@@ -5,6 +5,10 @@ import numpy as np
 import sys
 import json
 
+# Import HA/Connective bindings
+from bindings import new_ll, new_interpreter
+ll = new_ll("../ericland/connective/sharedlib/elconn.so")
+
 def main():
     for i in range(1,5):
         #does thing
