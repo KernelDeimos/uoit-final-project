@@ -1,0 +1,4 @@
+*.pyc
+
+# ... although the .so file is stuck in the repo forever now :/
+*.so
