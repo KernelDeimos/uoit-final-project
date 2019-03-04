@@ -2,7 +2,10 @@ package main
 
 import (
 	"C"
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,6 +16,14 @@ import (
 
 	"github.com/KernelDeimos/anything-gos/interp_a"
 )
+
+type Receipt struct {
+	Source    string
+	Event     string
+	Command   string
+	TimeStamp int64 `json:"Time Stamp"`
+	Result    string
+}
 
 //export elconn_serve_remote
 func elconn_serve_remote(addr *C.char, opID LibSharedID) int32 {
@@ -114,8 +125,33 @@ func elconn_connect_remote(addr *C.char) LibSharedID {
 	}
 
 	var opInterface interface{}
-	opInterface = interp_a.Operation(op)
+	opInterface = newReceiptPrinter(
+		interp_a.Operation(op),
+	)
 
 	id := AddSharedItem(LibSharedTypeAPI, &opInterface)
 	return id
+}
+
+func newReceiptPrinter(dest interp_a.Operation) interp_a.Operation {
+	return func(args []interface{}) ([]interface{}, error) {
+		data, err := json.Marshal(args)
+		if err != nil {
+			return nil, err
+		}
+		hash := sha1.Sum(data)
+		eventStr := "Unknown"
+		if len(args) > 1 {
+			eventStr = fmt.Sprint(args[0])
+		}
+		receipt, err := json.Marshal(Receipt{
+			Event:   eventStr,
+			Command: hex.EncodeToString(hash[:]),
+		})
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(string(receipt))
+		return dest(args)
+	}
 }
