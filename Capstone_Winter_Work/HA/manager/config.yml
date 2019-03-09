@@ -1,5 +1,5 @@
 components:
-  - cmd: ['python', 'test.py']
+  - cmd: ['python', 'test.py', '<id>', '<remote>']
     id:  "testpy@0.1"
     name: "Python Test Program"
 a: 5

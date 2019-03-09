@@ -14,7 +14,7 @@ recover = []
 config = {}
 
 # Import HA/Connective bindings
-ll = new_ll("../ericland/connective/sharedlib/elconn.so")
+ll = new_ll("../connective/connective/sharedlib/elconn.so")
 
 # Main Loop
 def main():
@@ -46,6 +46,14 @@ def main():
         name = componentConfig['name']
         id   = componentConfig['id']
         print("Executing process "+name+" with command "+str(cmd))
+
+        # re-write attributes in cmd to include remote address and app id
+        for x in range(len(cmd)):
+            cmd[x] = cmd[x].replace('<id>', id)
+            # TODO: this address is currently hard-coded
+            cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3003")
+        
+        print("exe: ",cmd)
 
         # Add data structures for process management
         # TODO(eric): Update when parameter binding is added to HA/Connective
@@ -87,15 +95,37 @@ def main():
                 receipt_list.append(receipt)
             elif not len(linebuffer):
                 break
-        # TODO: Check HA/Connective for New Receipts
-        # TODO: Eric
+
         # TODO: Validate Receipts
         print("Validating Receipts (TODO)")
         while True:
             if receipt_list:
                 #print(receipt_list.pop(0))
-                receipt_list.pop(0)
-                print("Receipt Popped") # Included for testing purposes only
+                item = receipt_list.pop(0)
+                print(item)
+
+                # TODO: possible key error ('Command' missing) would crash
+                #       the manager
+                receipt = connective.runs(
+                    f"get-receipt {item['Command']}", tolist=True)
+
+                print("Receipt Popped: ", receipt) # Included for testing purposes only
+
+                # TODO: if status is "started", push it to the back of the
+                #       receipt list and track how long this command is taking
+
+                # TODO: if status is neither "started" nor "complete", this
+                #       may indicate a problem:
+                #
+                #       unrecognized:
+                #       - Maybe HA/Connective just hasn't received it yet
+                #              (likely if the receipt was just generated)
+                #       - Maybe the component's connection to Connective has
+                #         failed (likely if it's been a while)
+                #
+                #       inconsistent:
+                #       - Internal error from HA/Connective; a failure should
+                #         be reported. ("this should never happen" type error)
             elif not len(receipt_list):
                 break
         # TODO: Handle Failure Recovery

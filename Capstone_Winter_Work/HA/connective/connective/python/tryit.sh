@@ -1,4 +1,3 @@
 #!/bin/bash
 
-rm ./elconn.so
-cp ../sharedlib/elconn.so ./
+(cd ../sharedlib && ./build.sh) && (rm ./elconn.so; cp ../sharedlib/elconn.so ./)

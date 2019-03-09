@@ -60,6 +60,12 @@ func GetSharedItem(typ LibSharedType, id LibSharedID) (*interface{}, bool) {
 	return item.Location, true
 }
 
+func AddSharedError(err error) LibSharedID {
+	var ei *interface{}
+	*ei = err
+	return AddSharedItem(LibSharedTypeError, ei)
+}
+
 //export elconn_get_type
 func elconn_get_type(datumID LibSharedID) LibSharedType {
 	item, exists := sharedItems[datumID]
