@@ -1,0 +1,11 @@
+HVACTest:
+    commands: 
+        - "cmd"
+    params:
+        - param1: "param"
+        - param2: "param"
+        - param3: "param"
+    options:
+        - option1: "opt"
+        - option2: "opt"
+        - option3: "opt"

@@ -1,0 +1,46 @@
+{% include 'header.html' %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			{% if package %}
+				{% for pack in package %}
+				<table>
+					<tr>
+						<th>{{ pack }}</th>
+					</tr>
+					<tr>
+						<th valign="top">Commands</th>
+						<td>
+						{% for cmd in package[pack]['commands'] %}
+							<span>{{ cmd }}</span><br>
+						{% endfor %}
+						</td>
+					</tr>
+					<tr>
+						<th valign="top">Parameters</th>
+					</tr>
+					{% for param in package[pack]['params'] %}
+					<tr>
+						{% for p in param %}
+							<th>{{ p }}</th>
+							<td>{{ param[p] }}</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+					{% for option in package[pack]['options'] %}
+					<tr>
+						{% for o in option %}
+							<th>{{ o }}</th>
+							<td>{{ option[o] }}</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+				</table>
+				{% endfor %}
+			{% else %}
+				<h3>Package not found.</h3>
+			{% endif %}
+		</div><!-- .col -->
+	</div><!-- .row -->
+</div><!-- .container -->
