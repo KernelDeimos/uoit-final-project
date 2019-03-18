@@ -1,0 +1,20 @@
+{
+        "name":"Temperature Sensor",
+        "description":"WoT connected temperature sensor",
+        "properties": {
+                "temperature": {
+                        "title": "Temperature",
+                        "type": "number",
+                        "unit": "degree Celsius",
+                        "readOnly": true,
+                        "description": "temperature"
+                },
+                "actions": {
+                        "reboot": {
+                                "title": "Reboot",
+                                "description": "Reboot the device"
+                        }
+                }
+        }
+}
+
