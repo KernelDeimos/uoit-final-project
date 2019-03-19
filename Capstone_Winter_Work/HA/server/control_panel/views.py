@@ -5,6 +5,14 @@ import shutil
 from flask import Flask, current_app, Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 
+from bindings import new_ll, connect
+
+# Import HA/Connective bindings
+ll = new_ll("../connective/connective/sharedlib/elconn.so")
+ll.elconn_init(0)
+# TODO: get Connective URL from configuration
+connective = connect(ll, "http://127.0.0.1:3003")
+
 control_panel = Blueprint('control_panel', __name__)
 
 PACKAGE_DIRECTORY = './packages'
