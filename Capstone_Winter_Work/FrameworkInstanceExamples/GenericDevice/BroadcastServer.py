@@ -33,30 +33,30 @@ while True:
 	# Set time out at beginning of loop to prevent waiting for connection blocking the broadcast
 	server.settimeout(1)
 	# Send broadcast
-        broadcast.sendto(encodedMessage, ('<broadcast>', 37020))
-        print("Sent Broadcast: "+message)
-        # Await connection or timeout
-        try:
+	broadcast.sendto(encodedMessage, ('<broadcast>', 37020))
+	print("Sent Broadcast: "+message)
+	# Await connection or timeout
+	try:
 		# Listen for hub to connect
-                server.listen(1)
+		server.listen(1)
 		# Accept hub connection
-                conn, addr = server.accept()
-                with conn:
+		conn, addr = server.accept()
+		with conn:
 			# Remove socket time out
 			server.settimeout(None)
-                        print('Connected by', addr)
-                        while True:
+			print('Connected by', addr)
+			while True:
 				clientMsg = json.dumps(server.recv(1024))
-				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"])
+				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"]))
 				# TODO define message codes
-				if clientMsg["code"] is "10":
+				if clientMsg["code"] == "10":
 					# Send Specification
 					try:
 						server.send(specification)
 					except Exception as exc:
 						print("Failed to send specification. Exiting with exception: %s" % (exc))
 						exit()
-				elif clientMsg["code"] is "20":
+				elif clientMsg["code"] == "20":
 					# Run Command and Return Output
 					# Get command
 					command = clientMsg["msg"]
@@ -88,7 +88,7 @@ while True:
 					# Handle unidentified code
 					print("Could not identify code %s. Cancelling transaction." % (clientMsg["code"]))
 	# Catch socket exceptions
-        except Exception as exc:
-                print("No connection before timeout. Broadcasting again.")
-        time.sleep(1)
+	except Exception as exc:
+		print("No connection before timeout. Broadcasting again.")
+	time.sleep(1)
 

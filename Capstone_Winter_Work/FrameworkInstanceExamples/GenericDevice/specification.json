@@ -7,7 +7,7 @@
 			"type": "number",
 			"unit": "degree celsius",
 			"readOnly": true,
-			"description": "An ambient temperature sensor",
+			"description": "An ambient temperature sensor"
 		}
 	},
 	"actions": {
