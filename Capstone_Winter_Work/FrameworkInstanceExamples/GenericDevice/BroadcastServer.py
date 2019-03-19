@@ -1,6 +1,8 @@
-`import socket
+# TODO: Add support for streaming
+import socket
 import time
 import json
+import subprocess
 import netifaces as ni
 
 # Get JSON specification
@@ -22,13 +24,15 @@ broadcast.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 # Configure server socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
-server.settimeout(1)
 # Set a timeout so the socket does not block indefinitely when trying to receive data.
 broadcast.settimeout(0.2)
 broadcast.bind(("", 44444))
 message = "['%s', '%s']" % (name,ip)
 encodedMessage = str.encode(message)
 while True:
+	# Set time out at beginning of loop to prevent waiting for connection blocking the broadcast
+	server.settimeout(1)
+	# Send broadcast
         broadcast.sendto(encodedMessage, ('<broadcast>', 37020))
         print("Sent Broadcast: "+message)
         # Await connection or timeout
@@ -46,8 +50,14 @@ while True:
 				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"])
 				# TODO define message codes
 				if clientMsg["code"] is "10":
-					server.send(specification)
+					# Send Specification
+					try:
+						server.send(specification)
+					except Exception as exc:
+						print("Failed to send specification. Exiting with exception: %s" % (exc))
+						exit()
 				elif clientMsg["code"] is "20":
+					# Run Command and Return Output
 					# Get command
 					command = clientMsg["msg"]
 					# Get commands.json
@@ -62,13 +72,21 @@ while True:
 						# Execute script
 						script = commandList[command].split(" ")
 						p = subprocess.Popen(script, stdout=subprocess.PIPE, universal_newlines=True)
-						# TODO: Add support for streaming values
-						# TODO: Error handling
 						output, err = p.communicate()
+						# If Error, Create Error Response
 						if err is not None:
-							server.send(str.encode(output))
+							response = json.dumps({"src": name, "command": command, "error": err})
+						# Else, Create Output Response
+						else:
+							response = json.dumps({"src": name, "command": command, "output": output})
+						# Send Response
+						try:
+							server.send(response)
+						except Exception as exc:
+							print("Failed to send command response. Exiting with exception: %s" % (exc))
 				else:
-					server.send(json.loads(clientMsg))
+					# Handle unidentified code
+					print("Could not identify code %s. Cancelling transaction." % (clientMsg["code"]))
 	# Catch socket exceptions
         except Exception as exc:
                 print("No connection before timeout. Broadcasting again.")
