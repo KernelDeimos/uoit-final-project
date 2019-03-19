@@ -1,4 +1,4 @@
-import socket
+`import socket
 import time
 import json
 import netifaces as ni
@@ -60,7 +60,7 @@ while True:
 					# Check if command exists within known commands
 					if commandList.hasKey(command):
 						# Execute script
-						script = commandList[command]
+						script = commandList[command].split(" ")
 						p = subprocess.Popen(script, stdout=subprocess.PIPE, universal_newlines=True)
 						# TODO: Add support for streaming values
 						# TODO: Error handling
