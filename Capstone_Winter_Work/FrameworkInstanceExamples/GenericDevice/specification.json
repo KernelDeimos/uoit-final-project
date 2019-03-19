@@ -1,0 +1,24 @@
+{
+	"name": "Temperature Sensor Example",
+	"description": "Generic specification for a device driver that includes temperature",
+	"properties": {
+		"temperature": {
+			"title": "Temperature",
+			"type": "number",
+			"unit": "degree celsius",
+			"readOnly": true,
+			"description": "An ambient temperature sensor",
+		}
+	},
+	"actions": {
+		"reboot": {
+			"title": "Reboot",
+			"description": "Reboot the device"
+		}
+	},
+	"events": {
+		"reboot": {
+			"description": "Going down for reboot"
+		}
+	}
+}
