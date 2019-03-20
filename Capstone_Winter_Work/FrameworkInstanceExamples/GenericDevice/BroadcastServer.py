@@ -25,7 +25,7 @@ broadcast.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 # Set a timeout so the socket does not block indefinitely when trying to receive data.
-broadcast.settimeout(0.2)
+broadcast.settimeout(10)
 broadcast.bind(("", 44444))
 message = '{"%s": "%s"}' % (name,ip)
 encodedMessage = str.encode(message)
