@@ -14,7 +14,7 @@ with open("specification.json", "r") as stream:
                 print("Failed to open specification json. Exiting with exception: %s" % (exc))
                 exit()
 # Get IP Address
-ip = ni.ifaddresses('wifi0')[ni.AF_INET][0]['addr']
+ip = ni.ifaddresses('eno1')[ni.AF_INET][0]['addr']
 # Configure Host and Port for server socket
 HOST = ip
 PORT = 5454
@@ -46,7 +46,7 @@ while True:
 			server.settimeout(10)
 			print('Connected by', addr)
 			while True:
-				clientMsg = json.loads(conn.recv(1024))
+				clientMsg = json.loads(str(conn.recv(1024), "utf-8"))
 				print(clientMsg['code'])
 				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"]))
 				# TODO define message codes
@@ -92,8 +92,8 @@ while True:
 					response = json.dumps({"src": name, "message": "unidentified code", "error": "unidentified code"})
 					conn.send(str.encode(response))
 					time.sleep(10)
-	# Catch socket exceptions
+		# Catch socket exceptions
 	except Exception as exc:
-		print("No connection before timeout. Broadcasting again. %s" % (exc))
+		print("Exception in main loop: %s" % (exc))
 	time.sleep(1)
 
