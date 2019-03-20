@@ -53,7 +53,7 @@ while True:
 				if clientMsg["code"] == "10":
 					# Send Specification
 					try:
-						server.send(specification)
+						conn.send(str.encode(json.dumps(specification)))
 					except Exception as exc:
 						print("Failed to send specification. Exiting with exception: %s" % (exc))
 						exit()
@@ -82,15 +82,18 @@ while True:
 							response = json.dumps({"src": name, "command": command, "output": output})
 						# Send Response
 						try:
-							conn.send(response)
+							print(response)
+							conn.send(str.encode(response))
 						except Exception as exc:
 							print("Failed to send command response. Exiting with exception: %s" % (exc))
 				else:
 					# Handle unidentified code
 					print("Could not identify code %s. Cancelling transaction." % (clientMsg["code"]))
-					response = json.dumps({"src": name, "command": msg, "error": "unidentified code"})
+					response = json.dumps({"src": name, "message": "unidentified code", "error": "unidentified code"})
+					conn.send(str.encode(response))
+					time.sleep(10)
 	# Catch socket exceptions
 	except Exception as exc:
-		print("No connection before timeout. Broadcasting again.")
+		print("No connection before timeout. Broadcasting again. %s" % (exc))
 	time.sleep(1)
 
