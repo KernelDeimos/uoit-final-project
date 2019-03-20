@@ -43,10 +43,11 @@ while True:
 		conn, addr = server.accept()
 		with conn:
 			# Remove socket time out
-			server.settimeout(180)
+			server.settimeout(10)
 			print('Connected by', addr)
 			while True:
-				clientMsg = json.loads(server.recv(1024))
+				clientMsg = json.loads(conn.recv(1024))
+				print(clientMsg['code'])
 				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"]))
 				# TODO define message codes
 				if clientMsg["code"] == "10":
@@ -81,12 +82,13 @@ while True:
 							response = json.dumps({"src": name, "command": command, "output": output})
 						# Send Response
 						try:
-							server.send(response)
+							conn.send(response)
 						except Exception as exc:
 							print("Failed to send command response. Exiting with exception: %s" % (exc))
 				else:
 					# Handle unidentified code
 					print("Could not identify code %s. Cancelling transaction." % (clientMsg["code"]))
+					response = json.dumps({"src": name, "command": msg, "error": "unidentified code"})
 	# Catch socket exceptions
 	except Exception as exc:
 		print("No connection before timeout. Broadcasting again.")
