@@ -14,7 +14,7 @@ with open("specification.json", "r") as stream:
                 print("Failed to open specification json. Exiting with exception: %s" % (exc))
                 exit()
 # Get IP Address
-ip = ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr']
+ip = ni.ifaddresses('wifi0')[ni.AF_INET][0]['addr']
 # Configure Host and Port for server socket
 HOST = ip
 PORT = 5454
@@ -27,7 +27,7 @@ server.bind((HOST, PORT))
 # Set a timeout so the socket does not block indefinitely when trying to receive data.
 broadcast.settimeout(0.2)
 broadcast.bind(("", 44444))
-message = "['%s', '%s']" % (name,ip)
+message = '{"%s": "%s"}' % (name,ip)
 encodedMessage = str.encode(message)
 while True:
 	# Set time out at beginning of loop to prevent waiting for connection blocking the broadcast
@@ -43,10 +43,10 @@ while True:
 		conn, addr = server.accept()
 		with conn:
 			# Remove socket time out
-			server.settimeout(None)
+			server.settimeout(180)
 			print('Connected by', addr)
 			while True:
-				clientMsg = json.dumps(server.recv(1024))
+				clientMsg = json.loads(server.recv(1024))
 				print("Src: %s Msg: %s (%s)" % (clientMsg["src"], clientMsg["msg"], clientMsg["code"]))
 				# TODO define message codes
 				if clientMsg["code"] == "10":
