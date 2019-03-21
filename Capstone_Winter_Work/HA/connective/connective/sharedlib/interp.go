@@ -17,6 +17,9 @@ func elconn_make_interpreter() LibSharedID {
 	// Add data structure factory
 	evaluator.AddOperation("@", makeDataStructureFactory())
 
+	// Add plugin factory
+	evaluator.AddOperation("include", makePluginFactory())
+
 	// Share evaluate function with library caller
 	id := AddSharedItem(LibSharedTypeAPI, &op)
 	return id
