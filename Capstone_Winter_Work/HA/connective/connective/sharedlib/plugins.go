@@ -159,6 +159,8 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 						"properties", ":", key, val})
 				}
 
+				mutexProperties.Unlock()
+
 			}
 		}()
 		return nil, nil
