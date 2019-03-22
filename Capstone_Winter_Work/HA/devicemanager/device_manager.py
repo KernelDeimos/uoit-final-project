@@ -116,13 +116,20 @@ class DeviceClient(Thread):
 
 # Main Loop
 def main():
+	# Get global device address dict
+	global deviceAddressDict
+	# Get global connected device dict
+	global connectedDeviceDict
 	# Create broadcast client
 	broadcastClient = BroadcastClient(BROADCAST_PORT)
 	# Enter Main Loop
 	while True:
-		# Liste for broadcast
+		# Listen for broadcast
 		try:
 			deviceName, deviceAddress = broadcastClient.listenForBroadcast()
+			if deviceName not in deviceAddressDict:
+				device = DeviceClient(deviceName, deviceAddress, DEVICE_PORT)
+				device.createSocket()
 		except socket.timeout as timeout:
 			print("[Broadcast Client] A timeout has occurred without finding a new broadcast.")
 		except socket.error as error:
@@ -130,28 +137,11 @@ def main():
 		except Exception as exc:
 			print("[Broadcast Client] An unexpected exception has occurred: %s" % (exc))
 
-#broadcastClient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-#broadcastClient.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-#broadcastClient.bind(("", 37020))
-
-#check = None
-
-#while True:
-
-	#deviceName, device = listenForBroadcast()
-	# TODO: make connectToDevice handle JSON instead of string
-	#if check != device:
-		#connectToDevice(device)
-	#if deviceName == "Humidity Sensor":
-		#command = "read hum"
-	#elif deviceName == "Temperature Sensor":
-		#command = "read temp"
-	#else:
-		#print(deviceName)
-		#print("Fuck you you fuck stick")
-		#exit()
-	#command = json.dumps({"src": "Hub", "code": "20", "msg": command})
-	#commandThread = SendCommandThread(device, command)
-	#commandThread.start()
-	#temperature = sendCommand(command)
-	#print(temperature)
+		# TODO: Check commands from connective
+		target = None
+		connectiveCommand = None
+		if True: # <-- Temp
+			device = connectedDeviceDict[target]
+			device.buildCommand(connectiveCommand)
+			device.start()
+			# TODO: Handle response through connective if not handled in run()
