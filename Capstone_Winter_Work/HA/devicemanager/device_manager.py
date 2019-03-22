@@ -67,14 +67,14 @@ class DeviceClient(Thread):
 		# TODO: Didn't know how else to set this paramter
 		self.command = None
 
-	def createSocket(self):
+	def createSocket(self, registry):
 		# Create client for new device
 		self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
 			# Connect to device
 			client.connect((address, port))
 			# Register device in connected device dictionary
-			self.register()
+			self.register(registry)
 			# Send message to get device specification
 			client.send(GET_SPECIFICATION_MSG)
 			# TODO; Handle specification through connective
@@ -83,11 +83,9 @@ class DeviceClient(Thread):
 			print("[Device Client %s] An unexpected exception has occurred: %s" % (self.name, exc)
 
 
-	def registerDeviceClient(self):
-		# Get global connected device thread dictionary
-		global connectedDeviceDict
+	def registerDeviceClient(self, registry):
 		# Register Device
-		connectedDeviceDict[self.name] = self
+		registry[self.name] = self
 
 	def buildCommand(self, command):
 		self.command = str.encode(json.dumps({"src": "hub", "code": "20", "msg": command}))
@@ -129,7 +127,7 @@ def main():
 			deviceName, deviceAddress = broadcastClient.listenForBroadcast()
 			if deviceName not in deviceAddressDict:
 				device = DeviceClient(deviceName, deviceAddress, DEVICE_PORT)
-				device.createSocket()
+				device.createSocket(connectedDeviceDict)
 		except socket.timeout as timeout:
 			print("[Broadcast Client] A timeout has occurred without finding a new broadcast.")
 		except socket.error as error:
