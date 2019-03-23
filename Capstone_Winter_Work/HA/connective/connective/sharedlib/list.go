@@ -4,8 +4,10 @@ import (
 	"C"
 
 	"encoding/json"
-	"github.com/KernelDeimos/gottagofast/toolparse"
 	"github.com/sirupsen/logrus"
+
+	"github.com/KernelDeimos/anything-gos/interp_a"
+	"github.com/KernelDeimos/gottagofast/toolparse"
 )
 
 //export elconn_list_from_json
@@ -53,7 +55,17 @@ func elconn_list_to_json(listID LibSharedID) *C.char {
 		return C.CString("Err")
 	}
 
-	result, err := json.Marshal(*listInterface)
+	list := (*listInterface).([]interface{})
+
+	// Remove invalid values from list
+	for i, val := range list {
+		switch val.(type) {
+		case interp_a.Operation:
+			list[i] = "__operation__"
+		}
+	}
+
+	result, err := json.Marshal(list)
 	if err != nil {
 		logrus.Error(err)
 		return C.CString("Err")

@@ -78,6 +78,8 @@ extern GoUint64 elconn_make_interpreter();
 
 extern GoUint64 elconn_call(GoUint64 p0, GoUint64 p1);
 
+extern void elconn_link(char* p0, GoUint64 p1, GoUint64 p2);
+
 extern GoUint64 elconn_list_from_json(char* p0);
 
 extern GoUint64 elconn_list_from_text(char* p0);
