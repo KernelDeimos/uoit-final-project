@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
@@ -41,9 +42,12 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	}
 	//::end
 
+	var result []interface{}
+	var err error
+
 	// Invoke "set" (:) operation to add add-device operation to operation
 	// Usage: add-device <Mozilla definition> <user-defined meta information>
-	op([]interface{}{":", "add-device", func(
+	result, err = op([]interface{}{":", "add-device", interp_a.Operation(func(
 		args []interface{}) ([]interface{}, error) {
 		//::gen verify-args add-device mozmeta interface{} usermeta interface{}
 		if len(args) < 2 {
@@ -164,7 +168,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			}
 		}()
 		return nil, nil
-	}})
+	})}) // geez this is starting to look like Javascript
+	if err != nil {
+		return nil, err
+	}
 
 	return nil, nil
 }
