@@ -49,5 +49,6 @@ def new_ll(libloc):
     # === set argument types
     ll.elconn_list_from_json.argtypes = [c_char_p]
     ll.elconn_serve_remote.argtypes = [c_char_p, c_ulonglong]
+    ll.elconn_link.argtypes = [c_char_p, c_ulonglong, c_ulonglong]
 
     return ll
