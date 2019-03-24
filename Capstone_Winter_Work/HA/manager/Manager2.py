@@ -28,7 +28,7 @@ def main():
             print(exc)
 
     # Init HA/Connective Server
-    initMsg = ll.elconn_init(0)
+    initMsg = ll.elconn_init(1)
     ll.elconn_display_info(initMsg)
     connective = new_interpreter(ll)
     connective.serve_remote(b":3003") # TODO: port from env or config
