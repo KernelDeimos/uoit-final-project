@@ -107,5 +107,7 @@ remote_connective.runl([
     # Method path
     'devices', 'add-device',
     # Method parameters
-    exampleDeviceDef, {}
+    exampleDeviceDef, {},
+    # Custom device ID
+    deviceID
 ])

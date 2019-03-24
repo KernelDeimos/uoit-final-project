@@ -50,6 +50,7 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	var err error
 
 	// Add empty dirctory for device node registry
+	deviceMapInternal := interp_a.InterpreterFactoryA{}.MakeEmpty()
 	deviceMap := interp_a.InterpreterFactoryA{}.MakeEmpty()
 
 	//::run : testout (store (DATA))
@@ -62,7 +63,13 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	}
 	//::end
 
-	_, err = op([]interface{}{":", "on",
+	_, err = op([]interface{}{":", "internal_registry",
+		interp_a.Operation(deviceMapInternal.OpEvaluate)})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = op([]interface{}{":", "registry",
 		interp_a.Operation(deviceMap.OpEvaluate)})
 	if err != nil {
 		return nil, err
@@ -82,13 +89,14 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	// Usage: add-device <Mozilla definition> <user-defined meta information>
 	_, err = op([]interface{}{":", "add-device", interp_a.Operation(func(
 		args []interface{}) ([]interface{}, error) {
-		//::gen verify-args add-device mozmeta interface{} usermeta interface{}
-		if len(args) < 2 {
-			return nil, errors.New("add-device requires at least 2 arguments")
+		//::gen verify-args add-device mozmeta interface{} usermeta interface{} externid string
+		if len(args) < 3 {
+			return nil, errors.New("add-device requires at least 3 arguments")
 		}
 
 		var mozmeta interface{}
 		var usermeta interface{}
+		var externid string
 		{
 			var ok bool
 			mozmeta, ok = args[0].(interface{})
@@ -98,6 +106,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			usermeta, ok = args[1].(interface{})
 			if !ok {
 				return nil, errors.New("add-device: argument 1: usermeta; must be type interface{}")
+			}
+			externid, ok = args[2].(string)
+			if !ok {
+				return nil, errors.New("add-device: argument 2: externid; must be type string")
 			}
 		}
 		//::end
@@ -227,7 +239,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			}
 		}()
 
-		deviceMap.AddOperation(deviceUUID, deviceNode.OpEvaluate)
+		// Register device to map of internal UUIDs
+		deviceMapInternal.AddOperation(deviceUUID, deviceNode.OpEvaluate)
+		// Register device to map of external UUIDs
+		deviceMap.AddOperation(externid, deviceNode.OpEvaluate)
 
 		return nil, nil
 	})}) // geez this is starting to look like Javascript
