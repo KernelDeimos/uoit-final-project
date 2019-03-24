@@ -1,0 +1,43 @@
+{
+        "name": "Bluetooth Speaker",
+        "description": "Bluetooth speaker for general tune listenage"
+        "properties": {
+                "song": {
+                        "title": "song",
+                        "type": ".mp3",
+                        "readOnly": false,
+                        "description": "The song playing on the speaker"
+                }
+        },
+        "actions": {
+		"play": {
+			"title": "play",
+			"description": "Trigger random song playback"
+		},
+		"pause": {
+			"title": "pause",
+			"description": "Trigger pause at current place in song"
+		},
+		"new song": {
+			"title": "new song",
+			"description": "Choose a new random song from library"
+		},
+                "reboot": {
+                        "title": "Reboot",
+                        "description": "Reboot the device"
+                }
+        },
+        "events": {
+		"playing" {
+			"description": "A song is playing",
+		},
+		"paused" {
+			"description": "Music is paused",
+		},
+                "reboot": {
+                        "description": "Going down for reboot"
+                }
+        }
+}
+
+
