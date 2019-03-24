@@ -1,42 +1,32 @@
 {% include 'header.html' %}
 
 <div class="container">
-	<div class="row">
-		<div class="col-4">
-			<h3>Packages: </h3>
-			{% if packages %}
-				<ul>
-				{% for package in packages %}
-					{% for name in package %}
-						<a href="/packages/{{ name }}"><li>{{ name }}</li></a>
-						<a href="/packages/remove/{{ name }}">REMOVE PACKAGE</a>
-					{% endfor %}
-				{% endfor %}
-				</ul>
-			{% else %}
-				<span>No packages found</span>
-			{% endif %}
-
-		</div><!-- .col -->
-		<div class="col-4">
-			<h3>Devices: </h3>
-			{% if devices %}
-				<ul>
-				<!-- TODO -->
-				</ul>
-			{% else %}
-				<span>No devices found.</span>
-			{% endif %}
-		</div><!-- .col -->
-		<div class="col-4">
-			<h3>Macros: </h3>
-			{% if macros %}
-				<ul>
-				<!-- TODO -->
-				</u>
-			{% else %}
-				<span>No macros found</span>
-			{% endif %}
-		</div><!-- .col -->
-	</div><!-- .row -->
+        <div class="row">
+                <div class="col-4">
+                        <h3>Packages: </h3>
+                        {% if packages %}
+                                <ul class="package-list">
+                                {% for package in packages %}
+                                        {% for name in package %}
+                                                <a href="/packages/{{ name }}"><li>{{ name }}</li></a>
+                                        {% endfor %}
+                                {% endfor %}
+                                </ul>
+                        {% else %}
+                                <span>No packages found</span><br>
+                        {% endif %}
+                        <a href="/packages/add">Add Package</a>
+                </div><!-- .col -->
+        </div><!-- .row -->
 </div><!-- .container -->
+
+<style>
+
+        .package-list,
+        .device-list,
+        .macro-list {
+                list-style-type: none;
+                padding-left: 0;
+        }
+
+</style>
