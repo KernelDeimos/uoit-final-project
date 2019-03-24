@@ -26,6 +26,12 @@ func makePluginFactory() interp_a.Operation {
 
 type DevicePluginUpdateEvent map[string]interface{}
 
+type DeviceListEntry struct {
+	InternalID    string             `json:"internal_id"`
+	ManagerID     string             `json:"manager_id"`
+	MozDefinition MozThingDefinition `json:"moz_definition"`
+}
+
 func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	//::gen verify-args makePlugDevice op interp_a.Operation
 	if len(args) < 1 {
@@ -52,6 +58,13 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	// Add empty dirctory for device node registry
 	deviceMapInternal := interp_a.InterpreterFactoryA{}.MakeEmpty()
 	deviceMap := interp_a.InterpreterFactoryA{}.MakeEmpty()
+
+	// Add an internal list of known devices (since listing in the directory
+	// will display functions as well as devices)
+	deviceList := []DeviceListEntry{}
+
+	// Mutex lock for the device list
+	mutexDeviceList := &sync.RWMutex{}
 
 	//::run : testout (store (DATA))
 	{
@@ -84,6 +97,22 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 		logrus.Debug(r)
 	}
 	//::end
+
+	// Add list operation to devices operation
+	_, err = op([]interface{}{":", "list", interp_a.Operation(func(
+		args []interface{}) ([]interface{}, error) {
+		mutexDeviceList.RLock()
+
+		// Copy device list to []interface{} type
+		result := []interface{}{}
+		for _, item := range deviceList {
+			result = append(result, item)
+		}
+
+		mutexDeviceList.RUnlock()
+
+		return result, nil
+	})})
 
 	// Invoke "set" (:) operation to add add-device operation to operation
 	// Usage: add-device <Mozilla definition> <user-defined meta information>
@@ -243,6 +272,15 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 		deviceMapInternal.AddOperation(deviceUUID, deviceNode.OpEvaluate)
 		// Register device to map of external UUIDs
 		deviceMap.AddOperation(externid, deviceNode.OpEvaluate)
+
+		// Add device to the device list
+		mutexDeviceList.Lock()
+		deviceList = append(deviceList, DeviceListEntry{
+			InternalID:    deviceUUID,
+			ManagerID:     externid,
+			MozDefinition: mozmetaStruct,
+		})
+		mutexDeviceList.Unlock()
 
 		return nil, nil
 	})}) // geez this is starting to look like Javascript
