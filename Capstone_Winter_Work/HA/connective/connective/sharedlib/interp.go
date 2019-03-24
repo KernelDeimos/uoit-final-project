@@ -56,3 +56,32 @@ func elconn_call(inOpID LibSharedID, inListID LibSharedID) LibSharedID {
 	id := AddSharedItem(LibSharedTypeList, &resultInterface)
 	return id
 }
+
+//export elconn_link
+func elconn_link(name *C.char, srcID, dstID LibSharedID) {
+	// Obtain caller inputs
+	opSrcPtr, okay := GetSharedItem(LibSharedTypeAPI, srcID)
+	if !okay {
+		logrus.Error("call operation: invalid value")
+		return
+	}
+	opDstPtr, okay := GetSharedItem(LibSharedTypeAPI, dstID)
+	if !okay {
+		logrus.Error("call operation: invalid value")
+		return
+	}
+	nameStr := C.GoString(name)
+
+	opSrc := (*opSrcPtr).(interp_a.Operation)
+	opDst := (*opDstPtr).(interp_a.Operation)
+
+	r, e := opDst([]interface{}{"format", "hi"})
+	logrus.Debug(r)
+	logrus.Warn(e)
+
+	result, err := opSrc([]interface{}{"evaluator:", nameStr, opDst})
+	if err != nil {
+		logrus.Error(err)
+		logrus.Debug(result)
+	}
+}

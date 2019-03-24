@@ -7,12 +7,12 @@ type MozThingLink struct {
 }
 
 type MozThingProperty struct {
-	Title       string       `json:"title"`
-	Type        string       `json:"type"`
-	Unit        string       `json:"unit"`
-	ReadOnly    bool         `json:"readOnly"`
-	Description string       `json:"description"`
-	Links       MozThingLink `json:"links"`
+	Title       string         `json:"title"`
+	Type        string         `json:"type"`
+	Unit        string         `json:"unit"`
+	ReadOnly    bool           `json:"readOnly"`
+	Description string         `json:"description"`
+	Links       []MozThingLink `json:"links"`
 }
 
 type MozThingAction struct {

@@ -28,7 +28,7 @@ def main():
             print(exc)
 
     # Init HA/Connective Server
-    initMsg = ll.elconn_init(0)
+    initMsg = ll.elconn_init(1)
     ll.elconn_display_info(initMsg)
     connective = new_interpreter(ll)
     connective.serve_remote(b":3003") # TODO: port from env or config
@@ -37,7 +37,8 @@ def main():
     connective.runs(": heartbeats (@ directory)")
 
     # Iniitalize IoT Data Structures
-    # ... TODO
+    connective.runs(": devices (@ directory)")
+    connective.runs("include device ($ devices)")
 
     # Define system according to configuration
     print("Starting subprocesses")
@@ -90,9 +91,12 @@ def main():
         print("Evaluating receipts in buffer")
         while True:
             if linebuffer:
-                receipt = json.loads(linebuffer.pop(0))
-                print("Source: {}\nEvent: {}".format(receipt["Source"], receipt["Event"]))
-                receipt_list.append(receipt)
+                try:
+                    receipt = json.loads(linebuffer.pop(0))
+                    print("Source: {}\nEvent: {}".format(receipt["Source"], receipt["Event"]))
+                    receipt_list.append(receipt)
+                except json.decoder.JSONDecodeError:
+                    pass
             elif not len(linebuffer):
                 break
 

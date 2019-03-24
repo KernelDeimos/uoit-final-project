@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
@@ -41,17 +42,61 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	}
 	//::end
 
+	// Create UUID for the device
+	deviceUUID := uuid.Must(uuid.NewV4()).String()
+	logrus.Debug("Device id will be:", deviceUUID)
+
+	// var result []interface{}
+	var err error
+
+	// Add empty dirctory for device node registry
+	deviceMapInternal := interp_a.InterpreterFactoryA{}.MakeEmpty()
+	deviceMap := interp_a.InterpreterFactoryA{}.MakeEmpty()
+
+	//::run : testout (store (DATA))
+	{
+		r, e := op([]interface{}{"__debug_listmethods"})
+		if e != nil {
+			logrus.Error(e)
+		}
+		logrus.Debug(r)
+	}
+	//::end
+
+	_, err = op([]interface{}{":", "internal_registry",
+		interp_a.Operation(deviceMapInternal.OpEvaluate)})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = op([]interface{}{":", "registry",
+		interp_a.Operation(deviceMap.OpEvaluate)})
+	if err != nil {
+		return nil, err
+	}
+
+	//::gen testout
+	{
+		r, e := op([]interface{}{"__debug_listmethods"})
+		if e != nil {
+			logrus.Error(e)
+		}
+		logrus.Debug(r)
+	}
+	//::end
+
 	// Invoke "set" (:) operation to add add-device operation to operation
 	// Usage: add-device <Mozilla definition> <user-defined meta information>
-	op([]interface{}{":", "add-device", func(
+	_, err = op([]interface{}{":", "add-device", interp_a.Operation(func(
 		args []interface{}) ([]interface{}, error) {
-		//::gen verify-args add-device mozmeta interface{} usermeta interface{}
-		if len(args) < 2 {
-			return nil, errors.New("add-device requires at least 2 arguments")
+		//::gen verify-args add-device mozmeta interface{} usermeta interface{} externid string
+		if len(args) < 3 {
+			return nil, errors.New("add-device requires at least 3 arguments")
 		}
 
 		var mozmeta interface{}
 		var usermeta interface{}
+		var externid string
 		{
 			var ok bool
 			mozmeta, ok = args[0].(interface{})
@@ -61,6 +106,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			usermeta, ok = args[1].(interface{})
 			if !ok {
 				return nil, errors.New("add-device: argument 1: usermeta; must be type interface{}")
+			}
+			externid, ok = args[2].(string)
+			if !ok {
+				return nil, errors.New("add-device: argument 2: externid; must be type string")
 			}
 		}
 		//::end
@@ -107,6 +156,8 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 				return nil, err
 			}
 			deviceNode.AddOperation("properties", o)
+			// TODO: optimize properties by creating separate
+			//       data-storage backend
 		}
 
 		// Create a queue for device updates
@@ -136,35 +187,68 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 					handleErrorInHere(err)
 				}
 
+				if len(result) < 1 {
+					logrus.Warnf("device '%s' received an empty event",
+						deviceUUID,
+					)
+					continue
+				}
+
 				// Use intermediate JSON representation to normalize and
 				// validate input event
 				var event DevicePluginUpdateEvent
 				{
-					resultBytes, err := json.Marshal(result)
+					resultBytes, err := json.Marshal(result[0])
 					if err != nil {
 						handleErrorInHere(err)
+						continue
 					}
 
 					err = json.Unmarshal(resultBytes, &event)
 					if err != nil {
 						handleErrorInHere(err)
+						continue
 					}
 				}
 
 				// Perform the update
 				mutexProperties.Lock()
 				for key, val := range event {
+					logrus.Debugf("Updating %s/%s with %v",
+						deviceUUID, key, val,
+					)
 					// Update property using set (:) operation
-					deviceNode.OpEvaluate([]interface{}{
-						"properties", ":", key, val})
+					result, err := deviceNode.OpEvaluate([]interface{}{
+						"properties", ":", key, interp_a.Operation(
+							// Use anonymous function to wrap data;
+							// this is a temporary solution until the hashmap
+							// storage backend is implemented in interp_a
+							func(_ []interface{}) ([]interface{}, error) {
+								return []interface{}{val}, nil
+							},
+						)})
+					if err != nil {
+						logrus.Error(err)
+						logrus.Debug(result)
+						continue
+					}
 				}
 
 				mutexProperties.Unlock()
 
 			}
 		}()
+
+		// Register device to map of internal UUIDs
+		deviceMapInternal.AddOperation(deviceUUID, deviceNode.OpEvaluate)
+		// Register device to map of external UUIDs
+		deviceMap.AddOperation(externid, deviceNode.OpEvaluate)
+
 		return nil, nil
-	}})
+	})}) // geez this is starting to look like Javascript
+	if err != nil {
+		return nil, err
+	}
 
 	return nil, nil
 }

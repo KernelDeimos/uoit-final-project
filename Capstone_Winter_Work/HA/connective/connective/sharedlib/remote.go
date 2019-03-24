@@ -112,11 +112,11 @@ func elconn_connect_remote(addr *C.char) LibSharedID {
 		req, err := http.NewRequest("POST", addrStr, strings.NewReader(
 			form.Encode(),
 		))
-		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		if err != nil {
 			logrus.Error(err)
 			return nil, err
 		}
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 		// Perform request
 		resp, err := client.Do(req)
