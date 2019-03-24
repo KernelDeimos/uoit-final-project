@@ -1,17 +1,23 @@
 import os
 import zipfile
-import yaml
+import yaml, json
 import shutil
-from flask import Flask, current_app, Blueprint, render_template, request, flash, redirect, url_for
+from flask import Flask, current_app, Blueprint, render_template, request, flash, redirect, url_for, Response
 from werkzeug.utils import secure_filename
 
-from bindings import new_ll, connect
+from bindings import new_ll, connect, new_interpreter
 
-# Import HA/Connective bindings
+# Create local interpreter and remote interpreter
 ll = new_ll("../connective/connective/sharedlib/elconn.so")
-ll.elconn_init(0)
+ll.elconn_init(1)
 # TODO: get Connective URL from configuration
-connective = connect(ll, "http://127.0.0.1:3003")
+remote_connective = connect(ll, b"http://vps.ericdube.com:3111")
+# remote_connective = connect(ll, b"http://127.0.0.1:3003")
+connective = new_interpreter(ll)
+# Allow messages to be send to remote interpreter by prefixing
+# the command "hub"
+ll.elconn_link(b"hub", connective.ii, remote_connective.ii)
+
 
 control_panel = Blueprint('control_panel', __name__)
 
@@ -152,7 +158,14 @@ def remove_package(package_name):
 # View Devices
 @control_panel.route('/devices')
 def view_devices():
-	pass
+	# Update local store
+	# TODO: set a timer for this instead of doing it on every request
+	connective.runs(': devices (hub devices list)')
+
+	# Copy devices list from Connective to Python
+	devices = connective.runs('hub devices list', tolist=True)
+
+	return Response(json.dumps(devices), mimetype='application/json')
 
 # View Macros
 @control_panel.route('/macros')
