@@ -27,7 +27,38 @@ ALLOWED_EXTENSIONS = ['zip']
 # Control Panel Main Page
 @control_panel.route('/')
 def index():
-	return render_template('index.html')
+	# TODO: Check packages name matches spec name
+	# TODO: Clean up invalid packages
+	# Get Upload Directory
+	UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+	# Get list of current packages
+	packages_dir = os.listdir(UPLOAD_FOLDER)
+	# Get all package specifications
+	packages = []
+	for dir_name in packages_dir:
+		dir = os.path.join(UPLOAD_FOLDER, dir_name)
+		if os.path.isdir(dir):
+			# Check if valid directory is a package
+			package_dir = os.listdir(dir)
+			for file in package_dir:
+				if file == "package.yml":
+					package_config = os.path.join(dir, file)
+					with open(package_config, "r") as stream:
+						try:
+							package = yaml.load(stream)
+						except Exception as exc:
+							package = exc
+					packages.append(package)
+	# Get Devices
+	# Update local store
+	# TODO: set a timer for this instead of doing it on every request
+	connective.runs(': devices (store (hub devices list))')
+
+	# Copy devices list from Connective to Python
+	devices = connective.runs('devices', tolist=True)
+	
+	return render_template("view_packages.html", packages = packages, devices = devices)
+	
 
 
 # View Packages
@@ -56,7 +87,7 @@ def view_packages():
 							package = exc
 					packages.append(package)
 	# Create Context
-	context = {"packages": packages}
+	context = {"packages": packages, "devices": devices"}
 	# Render View
 	return render_template("view_packages.html", packages = packages)
 
