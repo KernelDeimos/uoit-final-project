@@ -160,10 +160,10 @@ def remove_package(package_name):
 def view_devices():
 	# Update local store
 	# TODO: set a timer for this instead of doing it on every request
-	connective.runs(': devices (hub devices list)')
+	connective.runs(': devices (store (hub devices list))')
 
 	# Copy devices list from Connective to Python
-	devices = connective.runs('hub devices list', tolist=True)
+	devices = connective.runs('devices', tolist=True)
 
 	return Response(json.dumps(devices), mimetype='application/json')
 
