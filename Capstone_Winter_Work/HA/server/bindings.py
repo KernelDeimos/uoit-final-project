@@ -13,7 +13,7 @@ class Interpreter:
             return resultID
         # Report list as native Python type
         jsonText = self.ll.elconn_list_to_json(resultID)
-        return json.loads(jsonText)
+        return json.loads(str(jsonText, "utf-8"))
     def runl(self, inputList):
         strList = json.dumps(inputList)
         listID   = self.ll.elconn_list_from_json(strList.encode())
