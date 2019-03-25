@@ -240,7 +240,7 @@ def trigger_action():
 		action = request.form['action']
 
 		# TODONE: Eric
-		result = connective.runl(["hub", "devices", "internal_registry", target,
+		result = connective.runl(["hub", "devices", "registry", target,
 			"actions", action, "enque", True], tolist=True)
 		return str(result)
 
