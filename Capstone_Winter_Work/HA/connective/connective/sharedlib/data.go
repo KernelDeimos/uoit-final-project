@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-type LibSharedID uint64
+type LibSharedID int32
 type LibSharedType int32
 
 const (
