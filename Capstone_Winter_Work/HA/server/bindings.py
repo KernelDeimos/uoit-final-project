@@ -14,11 +14,16 @@ class Interpreter:
         # Report list as native Python type
         jsonText = self.ll.elconn_list_to_json(resultID)
         return json.loads(str(jsonText, "utf-8"))
-    def runl(self, inputList):
+    def runl(self, inputList, tolist=False):
         strList = json.dumps(inputList)
         listID   = self.ll.elconn_list_from_json(strList.encode())
         resultID = self.ll.elconn_call(self.ii, listID)
-        return resultID
+        # Report ID of data (default behaviour)
+        if tolist == False:
+            return resultID
+        # Report list as native Python type
+        jsonText = self.ll.elconn_list_to_json(resultID)
+        return json.loads(str(jsonText, "utf-8"))
     def serve_remote(self, addr):
         self.ll.elconn_serve_remote(addr, self.ii)
 
