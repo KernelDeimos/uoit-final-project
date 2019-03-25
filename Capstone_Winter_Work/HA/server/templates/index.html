@@ -21,7 +21,9 @@
                         <h3>Devices: </h3>
                         {% if devices %}
                                 <ul class="device-list">
-                                <!-- TODO -->
+                                {% for device in devices %}
+									<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_defintion']['name'] }}
+								{% endfor %}
                                 </ul>
                         {% else %}
                                 <span>No devices found.</span>

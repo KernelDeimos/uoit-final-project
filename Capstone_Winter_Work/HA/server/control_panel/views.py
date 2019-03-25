@@ -57,7 +57,7 @@ def index():
 	# Copy devices list from Connective to Python
 	devices = connective.runs('devices', tolist=True)
 	
-	return render_template("view_packages.html", packages = packages, devices = devices)
+	return render_template("index.html", packages = packages, devices = devices)
 	
 
 
