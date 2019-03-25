@@ -1,0 +1,61 @@
+{
+        "name": "Tp-Link Smart Switch",
+        "description": "A 3rd party WiFi stimulated smartswitch or plug"
+        "properties": {
+                "available": {
+                        "type": "power switch",
+                        "readOnly": false,
+                        "description": "The switch available for operation"
+                }
+        },
+        "actions": {
+		"turn on": {
+			"title": "turn on",
+			"description": "Activates the switch"
+		},
+		"turn off": {
+			"title": "turn off",
+			"description": "Deactivates the switch"
+		}
+        },
+        "events": {
+		"on" {
+			"description": "Device is active",
+		},
+		"off" {
+			"description": "Device is deactive",
+		},
+        }
+}
+{
+        "name": "Google ChromeCast",
+        "description": "A 3rd party WiFi stimulated media player"
+        "properties": {
+                "available": {
+                        "type": "Audio media receiver",
+                        "readOnly": false,
+                        "description": "The receiver ready for reception of data"
+                }
+        },
+        "actions": {
+                "play": {
+                        "title": "play",
+                        "description": "Trigger song playback"
+                },
+                "pause": {
+                        "title": "pause",
+                        "description": "Triger a song to pause"
+                }
+        },
+        "events": {
+                "playing" {
+                        "description": "Device is actively playing",
+                },
+                "paused" {
+                        "description": "Device is deactive",
+                },
+        }
+}
+
+
+

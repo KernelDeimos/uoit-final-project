@@ -14,28 +14,35 @@ class Plugs():
 			plug = SmartPlug(item)
 			plugInfo = (plug.get_sysinfo())
 			name = plugInfo['alias']
+			if plugInfo['relay_state'] == 0:
+				status = "OFF"
+			elif plugInfo['relay_state'] == 1:
+				status = "ON"
 			hostIP = item
-			plugs.append([name, hostIP])
+			UUID = plugInfo['deviceId']
+			plugs.append([name, hostIP, status, UUID])
+		return plugs
 
-	def turnOn(self, name):
+	def turnOn(self, UUID):
 		global plugs
+		self.findPlugs()
 		for item in plugs:
-			if item[0] == name:
+			if item[3] == UUID:
 				chosen = SmartPlug(item[1])
 				chosen.state = "ON"
 				break
 
-	def turnOff(self, name):
+	def turnOff(self, UUID):
 		global plugs
+		self.findPlugs()
 		for item in plugs:
-			if item[0] == name:
+			if item[3] == UUID:
 				chosen = SmartPlug(item[1])
 				chosen.state = "OFF"
 				break
 
-test = Plugs()
-test.findPlugs()
+#switchControl = Plugs()
+#switchControl.findPlugs()
 
-test.turnOn("Living Room Receiver")
-#time.sleep(2)
-#test.turnOff("Bedroom Audio")
+#print(plugs)
+

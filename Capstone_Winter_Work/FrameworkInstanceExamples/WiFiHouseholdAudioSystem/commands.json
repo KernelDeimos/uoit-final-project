@@ -1,0 +1,5 @@
+{
+	"begin action profile": "python3 chromeCastControl.py"
+	"turn switch on": "python3 -c 'from smartSwitchControl import Plugs; switches = Plugs(); switches.turnOn("<device UUID>")'
+	"turn switch off": "python3 -c 'from smartSwitchControl import Plugs; switches = Plugs(); switches.turnOff("<device UUID>")'
+}

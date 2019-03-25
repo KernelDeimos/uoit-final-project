@@ -1,6 +1,6 @@
 {
         "name": "Bluetooth Speaker",
-        "description": "Bluetooth speaker for general tune listenage"
+        "description": "Bluetooth speaker for general tune listenage",
         "properties": {
                 "song": {
                         "title": "song",
@@ -28,11 +28,11 @@
                 }
         },
         "events": {
-		"playing" {
-			"description": "A song is playing",
+		"playing": {
+			"description": "A song is playing"
 		},
-		"paused" {
-			"description": "Music is paused",
+		"paused": {
+			"description": "Music is paused"
 		},
                 "reboot": {
                         "description": "Going down for reboot"

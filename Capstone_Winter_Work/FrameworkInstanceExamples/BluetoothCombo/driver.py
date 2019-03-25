@@ -1,4 +1,5 @@
 import sys, os, bluetooth, subprocess, random, time
+from threading import Thread
 
 def confirmDevice():
 	bluetoothConfirm = subprocess.getoutput("hcitool con")
@@ -8,13 +9,31 @@ def confirmDevice():
 	else:
 		print("You are not connected to the Mobile speaker.")
 
+def pauseContinue(request):
+	action = request
+	if request == "s":
+		os.system(request)
+	elif request == "f":
+		os.system(request)
+	else:
+		pass
+
+proc = None
+
 def Play():
+	global proc
+	if proc != None:
+		proc.kill()
 	songs = os.listdir('/home/pi/BluetoothCombo/Music/TheGloriousSons/')
 	status = 0
-	while True:
+	#while True:
+	if True:
 		if status == 0:
-			status = os.system("mpg123 /home/pi/BluetoothCombo/Music/TheGloriousSons/"+songs[random.randint(0,10)])
+			status = 1
+			proc = subprocess.Popen(["mpg123", "/home/pi/BluetoothCombo/Music/TheGloriousSons/"+songs[random.randint(0,10)]])
 		else:
+			pass
+'''
 			print(" ")
 			cont = input("Would you like to continue?(y/n)")
 			if cont == "n":
@@ -31,7 +50,12 @@ def Play():
 				print("What? Recalibrating anyway...")
 				time.sleep(2)
 				Play()
+'''
 
-
-confirmDevice()
-Play()
+if __name__ == "__main__":
+	confirmDevice()
+	for x in range(3):
+		print("a")
+		Play()
+		time.sleep(5)
+		print("b")
