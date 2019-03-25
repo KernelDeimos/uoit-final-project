@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import yaml
 import time
 import json
@@ -31,7 +31,7 @@ def main():
     initMsg = ll.elconn_init(1)
     ll.elconn_display_info(initMsg)
     connective = new_interpreter(ll)
-    connective.serve_remote(b":3003") # TODO: port from env or config
+    connective.serve_remote(b":3111") # TODO: port from env or config
 
     # Initialize Management Data Structures
     connective.runs(": heartbeats (@ directory)")
@@ -52,13 +52,13 @@ def main():
         for x in range(len(cmd)):
             cmd[x] = cmd[x].replace('<id>', id)
             # TODO: this address is currently hard-coded
-            cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3003")
+            cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3111")
         
         print("exe: ",cmd)
 
         # Add data structures for process management
         # TODO(eric): Update when parameter binding is added to HA/Connective
-        connective.runs(f"heartbeats : '{id}' (@ heartbeat-monitor 1s)")
+        connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
 
         # Start Process
         process = Module(id, cmd, linebuffer)
@@ -80,7 +80,7 @@ def main():
             # TODO(any): add id field to Module, then use GetID here
             id = proc.GetName()
             result = connective.runs(
-                f"heartbeats '{id}' time-since", tolist=True)
+                "heartbeats '"+id+"' time-since", tolist=True)
             secondsSinceLastBeat = int(result[0])
 
             # TODO: act on result
@@ -111,7 +111,7 @@ def main():
                 # TODO: possible key error ('Command' missing) would crash
                 #       the manager
                 receipt = connective.runs(
-                    f"get-receipt {item['Command']}", tolist=True)
+                    "get-receipt "+item['Command'], tolist=True)
 
                 print("Receipt Popped: ", receipt) # Included for testing purposes only
 
