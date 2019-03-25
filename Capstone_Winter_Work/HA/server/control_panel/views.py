@@ -86,8 +86,6 @@ def view_packages():
 						except Exception as exc:
 							package = exc
 					packages.append(package)
-	# Create Context
-	context = {"packages": packages, "devices": devices"}
 	# Render View
 	return render_template("view_packages.html", packages = packages)
 
