@@ -1,0 +1,29 @@
+{% include 'header.html' %}
+
+<div class="container">
+        <div class="row">
+                <div class="col-4">
+                        <h3>Devices: </h3>
+                        {% if devices %}
+                                <ul class="device-list">
+                                {% for device in devices %}
+									<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_defintion']['name'] }}
+								{% endfor %}
+                                </ul>
+                        {% else %}
+                                <span>No devices found.</span>
+                        {% endif %}
+                </div><!-- .col -->
+        </div><!-- .row -->
+</div><!-- .container -->
+
+<style>
+
+        .package-list,
+        .device-list,
+        .macro-list {
+                list-style-type: none;
+                padding-left: 0;
+        }
+
+</style>
