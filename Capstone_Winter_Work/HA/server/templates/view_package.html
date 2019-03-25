@@ -19,7 +19,8 @@
                                                 <td>
                                                 {% for info in package[pack]['meta'] %}
                                                         {% for i in info %}
-                                                        <span class="property-name">{{ i }}:&nbsp;</span><span class="property-value"$                                                        {% endfor %}
+                                                        <span class="property-name">{{ i }}:&nbsp;</span><span class="property-value">{{ info[i] }}</span><br>
+                                                        {% endfor %}
                                                 {% endfor %}
                                                 </td>
                                         </tr><!-- #meta info -->
@@ -28,7 +29,8 @@
                                                 <td>
                                                 {% for cmd in package[pack]['commands'] %}
                                                         {% for c in cmd %}
-                                                        <span class="property-name">{{ c }}:&nbsp;</span><span class="property-value"$                                                        {% endfor %}
+                                                        <span class="property-name">{{ c }}:&nbsp;</span><span class="property-value">{{ cmd[c] }}</span><br>
+                                                        {% endfor %}
                                                 {% endfor %}
                                                 </td>
                                         </tr><!-- #commands -->
@@ -37,7 +39,8 @@
                                                 <td>
                                                 {% for param in package[pack]['params'] %}
                                                         {% for p in param %}
-                                                                <span class="property-name">{{ p }}:&nbsp;</span><span class="propert$                                                        {% endfor %}
+                                                                <span class="property-name">{{ p }}:&nbsp;</span><span class="property-value">{{ param[p] }}</span><br>
+                                                        {% endfor %}
                                                 {% endfor %}
                                                 </td>
                                         </tr>
@@ -46,7 +49,8 @@
                                                 <td>
                                                 {% for option in package[pack]['options'] %}
                                                         {% for o in option %}
-                                                                <span class="property-name">{{ o }}:&nbsp;</span><span class="propert$                                                        {% endfor %}
+                                                                <span class="property-name">{{ o }}:&nbsp;</span><span class="property-value">{{ option[o] }}</span><br>
+                                                        {% endfor %}
                                                 {% endfor %}
                                                 </td>
                                         </tr>
