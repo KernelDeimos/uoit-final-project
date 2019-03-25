@@ -238,8 +238,11 @@ def trigger_action():
 	if request.method == 'POST':
 		target = request.get_data('target')
 		action = request.get_data('action')
-		# TODO: Eric
-		return "placeholder"
+
+		# TODONE: Eric
+                result = connective.runl(["hub", "devices", "internal_registry", target,
+                    "actions", action, "enque", True], tolist=True)
+		return str(result)
 
 # View Macros
 @control_panel.route('/macros')
