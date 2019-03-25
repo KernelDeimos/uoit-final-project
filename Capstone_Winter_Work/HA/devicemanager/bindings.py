@@ -38,17 +38,17 @@ def new_ll(libloc):
 
     # === set return types
     ll.elconn_get_type.restype = c_int
-    ll.elconn_init.restype = c_ulonglong
-    ll.elconn_list_from_json.restype = c_ulonglong
-    ll.elconn_make_interpreter.restype = c_ulonglong
-    ll.elconn_call.restype = c_ulonglong
-    ll.elconn_connect_remote.restype = c_ulonglong
+    ll.elconn_init.restype = c_int
+    ll.elconn_list_from_json.restype = c_int
+    ll.elconn_make_interpreter.restype = c_int
+    ll.elconn_call.restype = c_int
+    ll.elconn_connect_remote.restype = c_int
     ll.elconn_list_strfirst.restype = c_char_p
     ll.elconn_list_to_json.restype = c_char_p
 
     # === set argument types
     ll.elconn_list_from_json.argtypes = [c_char_p]
-    ll.elconn_serve_remote.argtypes = [c_char_p, c_ulonglong]
-    ll.elconn_link.argtypes = [c_char_p, c_ulonglong, c_ulonglong]
+    ll.elconn_serve_remote.argtypes = [c_char_p, c_int]
+    ll.elconn_link.argtypes = [c_char_p, c_int, c_int]
 
     return ll
