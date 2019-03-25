@@ -189,7 +189,36 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			//       data-storage backend
 		}
 
-		// Create a queue for device updates
+		// Create a directory for request action queues
+		{
+
+			actions := interp_a.InterpreterFactoryA{}.MakeEmpty()
+
+			// Add each action to the actions map
+			for actionName, _ := range mozmetaStruct.Actions {
+				// Create a queue for device updatVes
+				{
+					result, err := makeDSQueue([]interface{}{})
+					o := result[0].(interp_a.Operation)
+					if err != nil {
+						return nil, err
+					}
+					deviceNode.AddOperation("update-queue", o)
+
+					// TODO: maybe it's possible to use Reflect in case an
+					// uncast func(args...) is passed
+					actionOp := result[0].(interp_a.Operation)
+
+					actions.AddOperation(actionName, actionOp)
+				}
+			}
+
+			// Add actions map to device node
+			deviceNode.AddOperation("actions", actions.OpEvaluate)
+
+		}
+
+		// Create a queue for device updatVes
 		{
 			result, err := makeDSQueue([]interface{}{})
 			o := result[0].(interp_a.Operation)
