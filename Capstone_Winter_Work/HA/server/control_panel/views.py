@@ -217,8 +217,8 @@ def view_device(device_id):
 @control_panel.route('/devices/property/read', methods=['POST'])
 def read_property():
 	if request.method == 'POST':
-		target = request.get_data('target')
-		property = request.get_data('property')
+		target = request.form['target']
+		property = request.form['property']
 		# TODO: Eric
 		return "placeholder"
 
@@ -226,9 +226,9 @@ def read_property():
 @control_panel.route('/devices/property/write', methods=['POST'])
 def write_property():
 	if request.method == 'POST':
-		target = request.get_data('target')
-		property = request.get_data('property')
-		value = request.get_data('value')
+		target = request.form['target']
+		property = request.form['property']
+		value = request.form['value']
 		# TODO: Eric
 		return "placeholder"
 
@@ -236,12 +236,12 @@ def write_property():
 @control_panel.route('/devices/action/trigger', methods=['POST'])
 def trigger_action():
 	if request.method == 'POST':
-		target = request.get_data('target')
-		action = request.get_data('action')
+		target = request.form['target']
+		action = request.form['action']
 
 		# TODONE: Eric
-                result = connective.runl(["hub", "devices", "internal_registry", target,
-                    "actions", action, "enque", True], tolist=True)
+		result = connective.runl(["hub", "devices", "internal_registry", target,
+			"actions", action, "enque", True], tolist=True)
 		return str(result)
 
 # View Macros
