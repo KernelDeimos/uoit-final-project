@@ -7,7 +7,7 @@
                                 <table class="package-data-table table-striped table-hover">
                                         <tr>
                                                 <th>{{ device["moz_definition"]["name"] }}</th>
-                                                <td></td>
+                                                <td>{{ device["manager_id"] }}</td>
                                         </tr><!-- #package header -->
                                         <tr>
                                                 <th>Description: </th>
@@ -26,10 +26,10 @@
 							<form>
 								<label for="write-{{ property }}">Write:</label>
 								<input id="write-{{ property }}" name="write-{{ property }}" class="write-value" />
-								<button type="button" class="submit-write" data-input="write-{{ property }}" data-property="{{ property }}" data-target="{{ device["internal_id"] }}">Submit</button>
+								<button type="button" class="submit-write" data-input="write-{{ property }}" data-property="{{ property }}" data-target="{{ device["manager_id"] }}">Submit</button>
 							</form>
 							{% endif %}
-							<button type="button" class="submit-read" id="read-{{property}}" data-target="{{ device["internal_id"] }}" data-property="{{ property }}">Read</button><span id="span-{{property}}"></span><br>
+							<button type="button" class="submit-read" id="read-{{property}}" data-target="{{ device["manager_id"] }}" data-property="{{ property }}">Read</button><span id="span-{{property}}"></span><br>
                                                 {% endfor %}
                                                 </td>
                                         </tr><!-- #meta info -->
@@ -39,7 +39,7 @@
                                                 {% for action in device["moz_definition"]["actions"] %}
                                                         <span class="property-name">{{ action }}:&nbsp;</span>
 							<span class="property-value">{{ device["moz_definition"]["actions"][action]["description"] }}</span><br>
-							<button type="button" id="trigger-{{action}}" class="action-trigger" data-target="{{ device["internal_id"] }}" data-action="{{ action }}">Trigger</button><br>
+							<button type="button" id="trigger-{{action}}" class="action-trigger" data-target="{{ device["manager_id"] }}" data-action="{{ action }}">Trigger</button><br>
                                                 {% endfor %}
                                                 </td>
                                         </tr><!-- #commands -->
