@@ -22,7 +22,7 @@
                         {% if devices %}
                                 <ul class="device-list">
                                 {% for device in devices %}
-									<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_defintion']['name'] }}
+									<a href="/devices/{{ device['internal_id'] }}">Name: {{ device['moz_definition']['name'] }}</a><br>
 								{% endfor %}
                                 </ul>
                         {% else %}
