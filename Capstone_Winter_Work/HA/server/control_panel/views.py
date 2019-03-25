@@ -194,7 +194,7 @@ def view_devices():
 	# Copy devices list from Connective to Python
 	devices = connective.runs('devices', tolist=True)
 
-	return render_template("view_device.html", devices = devices)
+	return render_template("view_devices.html", devices = devices)
 
 # View Device
 @control_panel.route('/devices/<device_id>')
@@ -206,7 +206,40 @@ def view_device(device_id):
 	# Copy devices list from Connective to Python
 	devices = connective.runs('devices', tolist=True)
 
-	return Response(json.dumps(devices), mimetype='application/json')
+	device = None
+	for dev in devices:
+		if dev["internal_id"] == device_id:
+			device = dev
+
+	return render_template("view_device.html", device = device)
+
+# Read Device Property
+@control_panel.route('/devices/property/read', methods=['POST'])
+def read_property():
+	if request.method == 'POST':
+		target = request.get_data('target')
+		property = request.get_data('property')
+		# TODO: Eric
+		return "placeholder"
+
+# Write Device Property
+@control_panel.route('/devices/property/write', methods=['POST'])
+def write_property():
+	if request.method == 'POST':
+		target = request.get_data('target')
+		property = request.get_data('property')
+		value = request.get_data('value')
+		# TODO: Eric
+		return "placeholder"
+
+# Trigger Device Action
+@control_panel.route('/devices/action/trigger', methods=['POST'])
+def trigger_action():
+	if request.method == 'POST':
+		target = request.get_data('target')
+		action = request.get_data('action')
+		# TODO: Eric
+		return "placeholder"
 
 # View Macros
 @control_panel.route('/macros')
