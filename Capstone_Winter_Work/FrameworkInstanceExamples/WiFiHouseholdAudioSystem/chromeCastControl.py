@@ -24,20 +24,20 @@ class Chromecasts():
 	def cast(self):
 		cast = None
 		global availableCasts
-		switches = Plugs()
-		switches.findPlugs()
+		plugs = Plugs()
 		for devices in availableCasts:
 			for obj in chromecasts:
+				#Comission Google Home Device for local control of chromecasts
 				if obj.device.friendly_name == "Home":
 					commandNode = pychromecast.Chromecast("192.168.1.20")
 					commandNode.wait()
 				if obj.device.friendly_name == "Whole Home Audio":
-					switches.turnOn("Living Room Receiver")
-					print("Living Room Receiver: ON")
-					switches.turnOn("Bedroom Receiver")
-					print("Bedroom Receiver: ON")
-					switches.turnOn("Basement Receiver")
-					print("Basement Receiver: ON")
+					plugs.turnOn("Living Room Receiver")
+					print("Living Room Receiver: On")
+					plugs.turnOn("Bedroom Receiver")
+					print("Bedroom Receiver: On")
+					plugs.turnOn("Basement Receiver")
+					print("Basement Receiver: On")
 					castNode = next(cc for cc in chromecasts if cc.device.friendly_name == "Whole Home Audio")
 					castNode.wait()
 					activate = castNode.media_controller
@@ -53,7 +53,6 @@ class Chromecasts():
 
 system = Chromecasts()
 system.findCasts()
-#print(availableCasts)
 
 system.cast()
 

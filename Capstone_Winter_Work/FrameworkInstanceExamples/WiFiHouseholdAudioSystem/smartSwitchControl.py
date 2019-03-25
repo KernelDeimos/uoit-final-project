@@ -23,20 +23,20 @@ class Plugs():
 			plugs.append([name, hostIP, status, UUID])
 		return plugs
 
-	def turnOn(self, UUID):
+	def turnOn(self, name):
 		global plugs
 		self.findPlugs()
 		for item in plugs:
-			if item[3] == UUID:
+			if item[0] == name:
 				chosen = SmartPlug(item[1])
 				chosen.state = "ON"
 				break
 
-	def turnOff(self, UUID):
+	def turnOff(self, name):
 		global plugs
 		self.findPlugs()
 		for item in plugs:
-			if item[3] == UUID:
+			if item[0] == name:
 				chosen = SmartPlug(item[1])
 				chosen.state = "OFF"
 				break
