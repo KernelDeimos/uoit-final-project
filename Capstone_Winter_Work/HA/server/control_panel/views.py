@@ -194,6 +194,18 @@ def view_devices():
 	# Copy devices list from Connective to Python
 	devices = connective.runs('devices', tolist=True)
 
+	return render_template("view_device.html", devices = devices)
+
+# View Device
+@control_panel.route('/devices/<device_id>')
+def view_device(device_id):
+	# Update local store
+	# TODO: set a timer for this instead of doing it on every request
+	connective.runs(': devices (store (hub devices list))')
+
+	# Copy devices list from Connective to Python
+	devices = connective.runs('devices', tolist=True)
+
 	return Response(json.dumps(devices), mimetype='application/json')
 
 # View Macros
