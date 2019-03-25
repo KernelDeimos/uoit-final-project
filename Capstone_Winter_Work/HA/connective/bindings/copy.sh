@@ -1,4 +1,4 @@
-#::run : subdirs (store server manager devicemanager pyconsole)
+#::run : subdirs (store server manager devicemanager pyconsole btmanager)
 #::end
 
 #::gen repcsv 'rm ../../$1/bindings.py' (subdirs)
