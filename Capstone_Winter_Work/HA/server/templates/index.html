@@ -112,10 +112,38 @@
 					<div>
 						{{ package[name] }}
 						<div class="nav nav-tabs" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist">
-							<a class="nav-itme nav-link active" id="meta-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#meta-{{ package[name]['package_id'] }}" role="tab" aria-controls="meta-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
+							<a class="nav-itme nav-link active" id="p-info-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-info-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-info-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
+							<a class="nav-itme nav-link active" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
+							<a class="nav-itme nav-link active" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
+							<a class="nav-itme nav-link active" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
 						</div>
 						<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
-							
+							<div class="tab-pane card-body fade show active" id="p-info-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package[name]['package_id'] }}">
+								<span>Creator: {{ package[name]['meta']['creator'] }}</span><br>
+								<span>Last Modified: {{ package[name]['meta']['last modified'] }}</span><br>
+								<span>Description: {{ package[name]['meta']['description'] }}</span><br>
+							</div>
+							<div class="tab-pane card-body fade" id="p-cmd-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package[name]['package_id'] }}">
+								<ul>
+								{% for command in package[name]['commands'] %}
+									{{ command }}
+								{% endfor %}
+								</ul>
+							</div>
+							<div class="tab-pane card-body fade" id="p-app-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package[name]['package_id'] }}">
+								<ul>
+								{% for application in package[name]['applications'] %}
+									{{ application }}
+								{% endfor %}
+								</ul>
+							</div>
+							<div class="tab-pane card-body fade" id="p-binding-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package[name]['package_id'] }}">
+								<ul>
+								{% for binding in package[name]['bindings'] %}
+									{{ binding }}
+								{% endfor %}
+								</ul>
+							</div>
 						</div>
 					</div><!-- .card-body -->
 				</div><!-- .card -->
@@ -129,17 +157,17 @@
 					</div>
 					<div>
 						<div class="nav nav-tabs" id="tabs-device-{{ device['internal_id'] }}" role="tablist">
-							<a class="nav-item nav-link active" id="info-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#info-{{ device['internal_id'] }}" role="tab" aria-controls="info-{{ device['internal_id'] }}" aria-selected="true">Info</a>
-							<a class="nav-item nav-link" id="property-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#property-{{ device['internal_id'] }}" role="tab" aria-controls="property-{{ device['internal_id'] }}" aria-selected="true">Properties</a>
-							<a class="nav-item nav-link" id="action-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#action-{{ device['internal_id'] }}" role="tab" aria-controls="action-{{ device['internal_id'] }}" aria-selected="true">Actions</a>
+							<a class="nav-item nav-link active" id="d-info-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-info-{{ device['internal_id'] }}" role="tab" aria-controls="d-info-{{ device['internal_id'] }}" aria-selected="true">Info</a>
+							<a class="nav-item nav-link" id="d-property-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-property-{{ device['internal_id'] }}" role="tab" aria-controls="d-property-{{ device['internal_id'] }}" aria-selected="true">Properties</a>
+							<a class="nav-item nav-link" id="d-action-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-action-{{ device['internal_id'] }}" role="tab" aria-controls="d-action-{{ device['internal_id'] }}" aria-selected="true">Actions</a>
 						</div><!-- .nav-pills -->
 						<div class="tab-content" id="tabContent-device-{{ device['internal_id'] }}">
-							<div class="tab-pane card-body fade show active" id="info-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="info-tab-{{ device['internal_id'] }}">
+							<div class="tab-pane card-body fade show active" id="d-info-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-info-tab-{{ device['internal_id'] }}">
 								<span>Internal UUID: {{ device['internal_id'] }}</span><br>
 								<span>Manager ID: {{ device['manager_id'] }}</span><br>
 								<span>Description: {{ device['moz_definition']['description'] }}</span><br>
 							</div><!-- #info-tab -->
-							<div class="tab-pane card-body fade" id="property-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="property-tab--{{ device['internal_id'] }}">
+							<div class="tab-pane card-body fade" id="d-property-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-property-tab--{{ device['internal_id'] }}">
 							{% for property in device['moz_definition']['properties'] %}
 								<span>{{ property|title }}: {{ device['moz_definition']['properties'][property]['description'] }}</span><br>
 								<div class="container-fluid">
@@ -163,7 +191,7 @@
 								</div>
 							{% endfor %}
 							</div><!-- #property-tab -->
-							<div class="tab-pane card-body fade" id="action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="action-tab-{{ device['internal_id'] }}">
+							<div class="tab-pane card-body fade" id="d-action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-action-tab-{{ device['internal_id'] }}">
 							{% for action in device['moz_definition']['actions'] %}
 								<div class="container-fluid">
 									<div class="form-group form-row">
