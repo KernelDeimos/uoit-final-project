@@ -1,54 +1,140 @@
 {% include 'header.html' %}
 
-<div class="container">
-        <div class="row">
-                <div class="col-4">
-                        <h3>Packages: </h3>
-                        {% if packages %}
-                                <ul class="package-list">
-                                {% for package in packages %}
-                                        {% for name in package %}
-                                                <a href="/packages/{{ name }}"><li>{{ name }}</li></a>
-                                        {% endfor %}
-                                {% endfor %}
-                                </ul>
-                        {% else %}
-                                <span>No packages found</span><br>
-                        {% endif %}
-                        <a href="/packages/add">Add Package</a>
-                </div><!-- .col -->
-                <div class="col-4">
-                        <h3>Devices: </h3>
-                        {% if devices %}
-                                <ul class="device-list">
-                                {% for device in devices %}
-									<a href="/devices/{{ device['internal_id'] }}">Name: {{ device['moz_definition']['name'] }}</a><br>
-								{% endfor %}
-                                </ul>
-                        {% else %}
-                                <span>No devices found.</span>
-                        {% endif %}
-                </div><!-- .col -->
-                <div class="col-4">
-                        <h3>Macros: </h3>
-                        {% if macros %}
-                                <ul class="macros-list">
-                                <!-- TODO -->
-                                </u>
-                        {% else %}
-                                <span>No macros found</span>
-                        {% endif %}
-                </div><!-- .col -->
-        </div><!-- .row -->
-</div><!-- .container -->
+<div class="wrapper">
+
+	<nav id="sidebar">
+		<div class="sidebar-header">
+			<h3>Extensible Package Integration Controller</h3>
+			
+			<ul class="list-unstyled component">
+				<li>
+					<a href="#packageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Packages</a>
+					<ul class="collapse list-unstyled" id="packageSubmenu">
+						<li>
+							<a href="/packages">View Packages</a>
+						</li>
+						<li>
+							<a href="/packages/add">Add Package</a>
+						</li>
+						<hr>
+						<p>Packages</p>
+						{% for package in packages &}
+						<li>
+							{% for name in package %}
+							<a href="/packages/{{ name }}">{{ name }}</a>
+							{%endfor%}
+						</li>
+						{% endfor %}
+					</ul>
+				</li>
+				<li>
+					<a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false" class="drowpdown-toggle">Devices</a>
+					<ul class="collapse list-unstyled" id="deviceSubmenu">
+						<li>
+							<a href="/devices">View Devices</a>
+						</li>
+						<hr>
+						<p>Connected Devices</p>
+						{% if devices %}
+							{% for device in devices %}
+						<li>
+							<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_definition']['name'] }}</a>
+						</li>
+							{% endfor %}
+						{% else %}
+						<li>
+							No Device Connected
+						</li>
+						<hr>
+						<p>Found Devices</p>
+						{% if found_devices %}
+						<li>
+							<!-- TODO -->
+						</li>
+						{% else %}
+						<li>
+							No Devices Found
+						</li>
+						{% endif %}
+					</ul>
+				</li>
+				<li>
+					<a href="#macroSubmenu" data-toggle="collapse" aria-expanded="false" class="drowpdown-toggle">Macros</a>
+					<ul class="collapse list-unstyled" id="macroSubmen">
+						<li>
+							<a href="/macros">View Macros</a>
+						</li>
+						<li>
+							<a href="/macros/add">Add Macro</a>
+						</li>
+						<hr>
+						<p>Current Macros</p>
+						{% if macros %}
+						<li>
+							<!-- TODO -->
+						</li>
+						{% else %}
+						<li>
+							No Macros Found
+						</li>
+						{% endif %}
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="content dashboard">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+
+				<button type="button" id="sidebarCollapse" class="btn btn-info">
+					<i class="fas fa-align-left"></i>
+					<span>Toggle Sidebar</span>
+				</button>
+			
+			</div><!-- .container-fluid -->
+		</nav><!-- .navbar -->
+	</div><!-- .dashboard -->
 
 <style>
-
-        .package-list,
-        .device-list,
-        .macro-list {
-                list-style-type: none;
-                padding-left: 0;
-        }
-
+  .wrapper {
+    display: flex;
+	width: 100%;
+	align-items: stretch;
+  }
+  #sidebar {
+    min-width: 250px;
+	max-width: 250px;
+	min-height: 100vh;
+  }
+  #sidebar.active {
+    margin-left: -250px;
+  }
+  a[data-toggle="collapse"] {
+    position: relative;
+  }
+  .dropdown-toggle::after {
+    display: block;
+	position: absolute;
+	top: 50%;
+	right: 20px;
+	transform: translateY(-50%);
+  }
+  @media (max-width: 268px) {
+    #sidebar {
+	  margin-left: -250px; 
+    }
+	#sidebar.active {
+	  margin-left: 0;
+	}
+  }
 </style>
+
+<script>
+	$(document.ready(function() {
+		$('#sidebarCollapse').click(function() {
+			$('#sidebar').toggleClass('active');
+		})
+	}
+</script>
