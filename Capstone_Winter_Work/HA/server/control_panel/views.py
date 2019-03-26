@@ -217,19 +217,31 @@ def view_device(device_id):
 @control_panel.route('/devices/property/read', methods=['POST'])
 def read_property():
 	if request.method == 'POST':
-		target = request.form['target']
-		property = request.form['property']
-		# TODO: Eric
-		return "placeholder"
+		target = request.form.get('target')
+		property_ = request.form.get('property')
+
+		# Read property from device properties map (HA/Connective)
+		result = connective.runl(
+			'hub devices registry'.split(' ') +
+			[target, "properties", property_], tolist=True)
+		return str(result[0])
 
 # Write Device Property
 @control_panel.route('/devices/property/write', methods=['POST'])
 def write_property():
 	if request.method == 'POST':
-		target = request.form['target']
-		property = request.form['property']
-		value = request.form['value']
-		# TODO: Eric
+		target = request.form.get('target')
+		property_ = request.form.get('property')
+		value = request.form.get('value')
+
+		propertyMap = {
+			property_: value,
+		}
+
+		# Enqueue property update request (HA/Connective)
+		hopefullyNotEqualToZero = connective.runl(
+			'hub devices registry'.split(' ') +
+			[target, "update-queue", "enque", propertyMap])
 		return "placeholder"
 
 # Trigger Device Action

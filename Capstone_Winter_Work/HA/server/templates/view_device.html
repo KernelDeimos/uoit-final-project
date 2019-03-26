@@ -103,6 +103,10 @@ $(document).ready(function() {
 		$.ajax({
 			method: "POST",
 			url: "/devices/property/read",
+			data: {
+				"target": target,
+				"property": property,
+			},
 			success: function(data) {
 				alert("Read "+property+" of "+target+": "+data)
 			}
