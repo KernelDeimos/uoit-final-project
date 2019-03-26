@@ -48,10 +48,6 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	}
 	//::end
 
-	// Create UUID for the device
-	deviceUUID := uuid.Must(uuid.NewV4()).String()
-	logrus.Debug("Device id will be:", deviceUUID)
-
 	// var result []interface{}
 	var err error
 
@@ -142,6 +138,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			}
 		}
 		//::end
+
+		// Create UUID for the device
+		deviceUUID := uuid.Must(uuid.NewV4()).String()
+		logrus.Debug("Device id will be:", deviceUUID)
 
 		// DECLARE struct for Mozilla web-thing definition
 		var mozmetaStruct MozThingDefinition
