@@ -101,10 +101,84 @@
 		</nav><!-- .navbar -->
 
 		<div class="container-fluid">
-			<div class="col-4">
-
-			</div>
-		</div>
+			<div class="masonry">
+				<!-- Create Package Cards -->
+				{% for package in packages %}
+					{% for name in package %}
+				<div class="card">
+					<div class="card-header">
+						{{ name }}
+					</div><!-- .card-header -->
+					<div>
+						{{ package[name] }}
+						<div class="nav nav-tabs" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist">
+							<a class="nav-itme nav-link active" id="meta-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#meta-{{ package[name]['package_id'] }}" role="tab" aria-controls="meta-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
+						</div>
+						<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
+							
+						</div>
+					</div><!-- .card-body -->
+				</div><!-- .card -->
+					{% endfor %}
+				{% endfor %}
+				<!-- Create Device Cards -->
+				{% for device in devices %}
+				<div class="card">
+					<div class="card-header">
+						{{ device['moz_definition']['name']|title }}	
+					</div>
+					<div>
+						<div class="nav nav-tabs" id="tabs-device-{{ device['internal_id'] }}" role="tablist">
+							<a class="nav-item nav-link active" id="info-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#info-{{ device['internal_id'] }}" role="tab" aria-controls="info-{{ device['internal_id'] }}" aria-selected="true">Info</a>
+							<a class="nav-item nav-link" id="property-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#property-{{ device['internal_id'] }}" role="tab" aria-controls="property-{{ device['internal_id'] }}" aria-selected="true">Properties</a>
+							<a class="nav-item nav-link" id="action-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#action-{{ device['internal_id'] }}" role="tab" aria-controls="action-{{ device['internal_id'] }}" aria-selected="true">Actions</a>
+						</div><!-- .nav-pills -->
+						<div class="tab-content" id="tabContent-device-{{ device['internal_id'] }}">
+							<div class="tab-pane card-body fade show active" id="info-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="info-tab-{{ device['internal_id'] }}">
+								<span>Internal UUID: {{ device['internal_id'] }}</span><br>
+								<span>Manager ID: {{ device['manager_id'] }}</span><br>
+								<span>Description: {{ device['moz_definition']['description'] }}</span><br>
+							</div><!-- #info-tab -->
+							<div class="tab-pane card-body fade" id="property-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="property-tab--{{ device['internal_id'] }}">
+							{% for property in device['moz_definition']['properties'] %}
+								<span>{{ property|title }}: {{ device['moz_definition']['properties'][property]['description'] }}</span><br>
+								<div class="container-fluid">
+								{% if device['moz_definition']['properties'][property]['type'] == 'number' %}
+									<div class="form-group form-row">
+										<input type="text" class="col-7 form-control" readonly value="-- {{ device['moz_definition']['properties'][property]['unit'] }}"/>
+										<button type="button" class="col-4 offset-1 btn btn-primary">Read</button>
+									</div>
+									{% if device['moz_definition']['properties'][property]['readOnly'] == False %}
+									<div class="form-group form-row">
+										<input type="text" class="col-7 form-control" />
+										<button type="button" class="col-4 offset-1 btn btn-primary">Write</button>
+									</div>
+									{% endif %}
+								{% else %}
+									<div class="form-group form-row">
+										<input type="text" class="col-7 form-control" readonly value="{{ action }}" />
+										<button type="button" class="col-4 offset-1 btn btn-primary">Read</button>
+									</div>
+								{% endif %}
+								</div>
+							{% endfor %}
+							</div><!-- #property-tab -->
+							<div class="tab-pane card-body fade" id="action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="action-tab-{{ device['internal_id'] }}">
+							{% for action in device['moz_definition']['actions'] %}
+								<div class="container-fluid">
+									<div class="form-group form-row">
+										<input type="text" class="col-7 form-control" readonly value="{{ action }}">
+										<button type="button" class="col-4 offset-1 btn btn-primary">Trigger</button>
+									</div>
+								</div>
+							{% endfor %}
+							</div>
+						</div><!-- .tab-content -->
+					</div><!-- .card-body -->
+				</div><!-- .card -->
+				{% endfor %}
+			</div><!-- .masonry -->
+		</div><!-- .container-fluid -->
 
 	</div><!-- .dashboard -->
 
@@ -197,6 +271,21 @@ a[data-toggle="collapse"] {
 	#sidebar.active {
 		margin-left: 0;
 	}
+}
+
+.navbar {
+	margin-bottom: 1em;
+}
+
+.masonry {
+	column-count: 4;
+	column-gap: 1em;
+}
+
+.card {
+	display: inline-block;
+	margin: 0 0 1em;
+	width: 100%;
 }
 </style>
 
