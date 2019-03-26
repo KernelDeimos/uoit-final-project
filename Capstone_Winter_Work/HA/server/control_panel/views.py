@@ -222,7 +222,7 @@ def read_property():
 
 		# Read property from device properties map (HA/Connective)
 		result = connective.runl(
-			'hub devices registry'.split(' ') +
+			'hub devices internal_registry'.split(' ') +
 			[target, "properties", property_], tolist=True)
 		return str(result[0])
 
