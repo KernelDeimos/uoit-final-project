@@ -1,11 +1,16 @@
 HVACTest:
+    package_id: "12345678"
+    meta:
+        - "creator": "Taylor Somann"
+        - "last modified": "March 26th, 2019"
+        - "description": "An example package specification"
     commands: 
         - "cmd"
-    params:
-        - param1: "param"
-        - param2: "param"
-        - param3: "param"
-    options:
-        - option1: "opt"
-        - option2: "opt"
-        - option3: "opt"
+    applications:
+        - "example.py"
+        - "daemon.py"
+        - "monitor.py"
+    bindings:
+        - "directory"
+        - "list"
+        - "map"
