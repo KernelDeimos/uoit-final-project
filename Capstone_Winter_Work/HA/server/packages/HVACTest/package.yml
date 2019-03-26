@@ -1,9 +1,9 @@
 HVACTest:
     package_id: "12345678"
     meta:
-        - "creator": "Taylor Somann"
-        - "last modified": "March 26th, 2019"
-        - "description": "An example package specification"
+        creator: "Taylor Somann"
+        last modified: "March 26th, 2019"
+        description: "An example package specification"
     commands: 
         - "cmd"
     applications:

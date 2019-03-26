@@ -113,9 +113,9 @@
 						{{ package[name] }}
 						<div class="nav nav-tabs" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist">
 							<a class="nav-itme nav-link active" id="p-info-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-info-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-info-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
-							<a class="nav-itme nav-link active" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
-							<a class="nav-itme nav-link active" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
-							<a class="nav-itme nav-link active" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
+							<a class="nav-item nav-link" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
+							<a class="nav-item nav-link" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
+							<a class="nav-item nav-link" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
 						</div>
 						<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
 							<div class="tab-pane card-body fade show active" id="p-info-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package[name]['package_id'] }}">
@@ -126,21 +126,21 @@
 							<div class="tab-pane card-body fade" id="p-cmd-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package[name]['package_id'] }}">
 								<ul>
 								{% for command in package[name]['commands'] %}
-									{{ command }}
+									<li>{{ command }}</li>
 								{% endfor %}
 								</ul>
 							</div>
 							<div class="tab-pane card-body fade" id="p-app-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package[name]['package_id'] }}">
 								<ul>
 								{% for application in package[name]['applications'] %}
-									{{ application }}
+									<li>{{ application }}</li>
 								{% endfor %}
 								</ul>
 							</div>
 							<div class="tab-pane card-body fade" id="p-binding-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package[name]['package_id'] }}">
 								<ul>
 								{% for binding in package[name]['bindings'] %}
-									{{ binding }}
+									<li>{{ binding }}</li>
 								{% endfor %}
 								</ul>
 							</div>
@@ -306,7 +306,7 @@ a[data-toggle="collapse"] {
 }
 
 .masonry {
-	column-count: 4;
+	column-count: 3;
 	column-gap: 1em;
 }
 
