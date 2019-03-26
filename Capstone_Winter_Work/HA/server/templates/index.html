@@ -4,137 +4,206 @@
 
 	<nav id="sidebar">
 		<div class="sidebar-header">
-			<h3>Extensible Package Integration Controller</h3>
-			
-			<ul class="list-unstyled component">
-				<li>
-					<a href="#packageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Packages</a>
-					<ul class="collapse list-unstyled" id="packageSubmenu">
-						<li>
-							<a href="/packages">View Packages</a>
-						</li>
-						<li>
-							<a href="/packages/add">Add Package</a>
-						</li>
-						<hr>
-						<p>Packages</p>
-						{% for package in packages &}
-						<li>
-							{% for name in package %}
-							<a href="/packages/{{ name }}">{{ name }}</a>
-							{%endfor%}
-						</li>
-						{% endfor %}
-					</ul>
-				</li>
-				<li>
-					<a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false" class="drowpdown-toggle">Devices</a>
-					<ul class="collapse list-unstyled" id="deviceSubmenu">
-						<li>
-							<a href="/devices">View Devices</a>
-						</li>
-						<hr>
-						<p>Connected Devices</p>
-						{% if devices %}
-							{% for device in devices %}
-						<li>
-							<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_definition']['name'] }}</a>
-						</li>
-							{% endfor %}
-						{% else %}
-						<li>
-							No Device Connected
-						</li>
-						<hr>
-						<p>Found Devices</p>
-						{% if found_devices %}
-						<li>
-							<!-- TODO -->
-						</li>
-						{% else %}
-						<li>
-							No Devices Found
-						</li>
-						{% endif %}
-					</ul>
-				</li>
-				<li>
-					<a href="#macroSubmenu" data-toggle="collapse" aria-expanded="false" class="drowpdown-toggle">Macros</a>
-					<ul class="collapse list-unstyled" id="macroSubmen">
-						<li>
-							<a href="/macros">View Macros</a>
-						</li>
-						<li>
-							<a href="/macros/add">Add Macro</a>
-						</li>
-						<hr>
-						<p>Current Macros</p>
-						{% if macros %}
-						<li>
-							<!-- TODO -->
-						</li>
-						{% else %}
-						<li>
-							No Macros Found
-						</li>
-						{% endif %}
-					</ul>
-				</li>
-			</ul>
+			<h3>E.P.I.C.</h3>
 		</div>
+			
+		<ul class="list-unstyled component">
+			<li>
+				<a href="#packageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Packages</a>
+				<ul class="collapse list-unstyled" id="packageSubmenu">
+					<li>
+						<a href="/packages">View Packages</a>
+					</li>
+					<li>
+						<a href="/packages/add">Add Package</a>
+					</li>
+					<hr>
+					<p>Packages</p>
+					{% for package in packages %}
+					<li>
+						{% for name in package %}
+						<a href="/packages/{{ name }}">{{ name }}</a>
+						{%endfor%}
+					</li>
+					{% endfor %}
+					<hr>
+				</ul>
+			</li>
+			<li>
+				<a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Devices</a>
+				<ul class="collapse list-unstyled" id="deviceSubmenu">
+					<li>
+						<a href="/devices">View Devices</a>
+					</li>
+					<hr>
+					<p>Connected Devices</p>
+					{% if devices %}
+						{% for device in devices %}
+					<li>
+						<a href="/devices/{{ device['internal_id'] }}">{{ device['moz_definition']['name'] }}</a>
+					</li>
+						{% endfor %}
+					{% else %}
+					<li>
+						<span>No Device Connected</span>
+					</li>
+					{% endif %}
+					<hr>
+					<p>Found Devices</p>
+					{% if found_devices %}
+					<li>
+						<!-- TODO -->
+					</li>
+					{% else %}
+					<li>
+						<span>No Devices Found</span>
+					</li>
+					{% endif %}
+					<hr>
+				</ul>
+			</li>
+			<li>
+				<a href="#macroSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Macros</a>
+				<ul class="collapse list-unstyled" id="macroSubmenu">
+					<li>
+						<a href="/macros">View Macros</a>
+					</li>
+					<li>
+						<a href="/macros/add">Add Macro</a>
+					</li>
+					<hr>
+					<p>Current Macros</p>
+					{% if macros %}
+					<li>
+						<!-- TODO -->
+					</li>
+					{% else %}
+					<li>
+						<span>No Macros Found</span>
+					</li>
+					{% endif %}
+					<hr>
+				</ul>
+			</li>
+		</ul>
 	</nav>
 
-	<div class="content dashboard">
+	<div class="content dashboard" style="width: 100%">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
 
-				<button type="button" id="sidebarCollapse" class="btn btn-info">
+				<button type="button" id="sidebarCollapse" class="btn btn-primary">
 					<i class="fas fa-align-left"></i>
 					<span>Toggle Sidebar</span>
 				</button>
 			
 			</div><!-- .container-fluid -->
 		</nav><!-- .navbar -->
+
+		<div class="container-fluid">
+			<div class="col-4">
+
+			</div>
+		</div>
+
 	</div><!-- .dashboard -->
 
 <style>
-  .wrapper {
-    display: flex;
+@import "https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700";
+
+body {
+	font-family: 'Lato', sans-serif;
+	background: #DCDCDC;
+}
+
+p {
+	font-family: 'Lato', sans-serif;
+	font-size: 1.1em;
+	font-weight: 300;
+	line-height: 1.7em;
+	color: #BBB;
+}
+
+a, a:hover, a:focus {
+	color: inherit;
+	text-decoration: none;
+	transition: all 0.3s;
+}
+
+.wrapper {
+	display: flex;
 	width: 100%;
 	align-items: stretch;
-  }
-  #sidebar {
-    min-width: 250px;
+}
+
+#sidebar {
+	min-width: 250px;
 	max-width: 250px;
 	min-height: 100vh;
-  }
-  #sidebar.active {
-    margin-left: -250px;
-  }
-  a[data-toggle="collapse"] {
-    position: relative;
-  }
-  .dropdown-toggle::after {
-    display: block;
+
+	background: #007BFF;
+	color: #fff;
+	transition: all 0.3.s;
+}
+#sidebar hr {
+	border-color: #BBB;
+}
+#sidebar .siderbar-header {
+	padding: 20px;
+	background: #6D7FCC;
+}
+#sidebar ul.components {
+	padding: 20px 0;
+	border-bottom: 1px solid #47748B;
+}
+#sidebar ul p {
+	color: #FFF;
+	padding: 10px;
+}
+#sidebar ul li a,
+#sidebar ul li span {
+	padding: 10px;
+	font-size: 1.1em;
+	display: block;
+}
+#sidebar ul li a:hover {
+	color: #7386D5;
+	background #FFF;
+}
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+	color: #FFF;
+}
+#sidebar.active {
+	margin-left: -250px;
+}
+ul ul a {
+	font-size: 0.9em !important;
+	padding-left: 30px !important;
+}
+a[data-toggle="collapse"] {
+	position: relative;
+}
+.dropdown-toggle::after {
+	display: block;
 	position: absolute;
 	top: 50%;
 	right: 20px;
 	transform: translateY(-50%);
-  }
-  @media (max-width: 268px) {
-    #sidebar {
-	  margin-left: -250px; 
-    }
-	#sidebar.active {
-	  margin-left: 0;
+}
+@media (max-width: 268px) {
+	#sidebar {
+		margin-left: -250px; 
 	}
-  }
+	#sidebar.active {
+		margin-left: 0;
+	}
+}
 </style>
 
 <script>
-	$(document.ready(function() {
+	$(document).ready(function() {
 		$('#sidebarCollapse').click(function() {
 			$('#sidebar').toggleClass('active');
-		})
-	}
+		});
+	});
 </script>
