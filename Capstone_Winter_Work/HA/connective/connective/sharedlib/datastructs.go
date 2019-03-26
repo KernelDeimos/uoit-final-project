@@ -69,6 +69,22 @@ func makeDSQueue(args []interface{}) ([]interface{}, error) {
 	return []interface{}{interp_a.Operation(empty.OpEvaluate)}, nil
 }
 
+func makeDSBroadcastQueue(args []interface{}) ([]interface{}, error) {
+	// Create empty interpreter for request queue functions
+	empty := interp_a.InterpreterFactoryA{}.MakeEmpty()
+
+	// Make request queue
+	ch := make(chan interface{})
+	queue := BroadcastQueue{
+		Chan: ch,
+	}
+
+	// Bind request queue functions to interpreter
+	queue.Bind(empty)
+
+	return []interface{}{interp_a.Operation(empty.OpEvaluate)}, nil
+}
+
 func makeDSHeartbeatMonitor(args []interface{}) ([]interface{}, error) {
 	//::gen verify-args make-heartbeat-monitor timeoutstr string
 	if len(args) < 1 {
@@ -122,6 +138,33 @@ func (rq RequestQueue) OpEnqueue(args []interface{}) ([]interface{}, error) {
 }
 
 func (rq RequestQueue) OpDequeueBlk(args []interface{}) ([]interface{}, error) {
+	value := <-rq.Chan
+	return []interface{}{value}, nil
+}
+
+type BroadcastQueue struct {
+	Chan chan interface{}
+}
+
+func (rq BroadcastQueue) Bind(destination interp_a.HybridEvaluator) {
+	destination.AddOperation("broadcast", rq.OpEnqueue)
+	destination.AddOperation("block", rq.OpDequeueBlk)
+}
+
+func (rq BroadcastQueue) OpEnqueue(args []interface{}) ([]interface{}, error) {
+	sent := 0
+	for _, arg := range args {
+		select {
+		case rq.Chan <- arg:
+			sent++
+		default:
+			//
+		}
+	}
+	return []interface{}{sent}, nil
+}
+
+func (rq BroadcastQueue) OpDequeueBlk(args []interface{}) ([]interface{}, error) {
 	value := <-rq.Chan
 	return []interface{}{value}, nil
 }

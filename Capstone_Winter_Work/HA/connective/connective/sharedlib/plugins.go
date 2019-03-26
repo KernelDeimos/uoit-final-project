@@ -26,6 +26,11 @@ func makePluginFactory() interp_a.Operation {
 
 type DevicePluginUpdateEvent map[string]interface{}
 
+type DevicePluginEvent struct {
+	Type     string                  `json:"type"`
+	Contents DevicePluginUpdateEvent `json:"contents"`
+}
+
 type DeviceListEntry struct {
 	InternalID    string             `json:"internal_id"`
 	ManagerID     string             `json:"manager_id"`
@@ -218,7 +223,7 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 
 		}
 
-		// Create a queue for device updatVes
+		// Create a queue for device updates
 		{
 			result, err := makeDSQueue([]interface{}{})
 			o := result[0].(interp_a.Operation)
@@ -226,6 +231,16 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 				return nil, err
 			}
 			deviceNode.AddOperation("update-queue", o)
+		}
+
+		// Create a queue for device property updates
+		{
+			result, err := makeDSBroadcastQueue([]interface{}{})
+			o := result[0].(interp_a.Operation)
+			if err != nil {
+				return nil, err
+			}
+			deviceNode.AddOperation("event-queue", o)
 		}
 
 		// Start goroutine for queue-properties interaction
@@ -243,6 +258,7 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 					[]interface{}{"update-queue", "block"})
 				if err != nil {
 					handleErrorInHere(err)
+					continue
 				}
 
 				if len(result) < 1 {
@@ -269,7 +285,17 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 					}
 				}
 
-				// Perform the update
+				// Send the update to the event queue
+				_, err = deviceNode.OpEvaluate(
+					[]interface{}{"event-queue", "enque", DevicePluginEvent{
+						Type:     "property.set",
+						Contents: event,
+					}})
+				if err != nil {
+					handleErrorInHere(err)
+				}
+
+				// Perform the update on internal storage
 				mutexProperties.Lock()
 				for key, val := range event {
 					logrus.Debugf("Updating %s/%s with %v",
