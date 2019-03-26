@@ -15,6 +15,8 @@ class Interpreter:
         jsonText = self.ll.elconn_list_to_json(resultID)
         return json.loads(str(jsonText, "utf-8"))
     def runl(self, inputList, tolist=False):
+        print("{{{ INPUT LIST }}}")
+        print(inputList)
         strList = json.dumps(inputList)
         listID   = self.ll.elconn_list_from_json(strList.encode())
         resultID = self.ll.elconn_call(self.ii, listID)

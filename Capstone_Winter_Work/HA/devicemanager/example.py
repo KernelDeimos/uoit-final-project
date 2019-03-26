@@ -87,7 +87,7 @@ exampleDeviceDef = {
 
 # TODO: uuid for running example multiple times
 deviceID = "mydeviceid"
-print(f"The device id will be: {deviceID}")
+print("The device id will be: "+deviceID)
 
 # Create local interpreter and remote interpreter
 ll = new_ll("../connective/connective/sharedlib/elconn.so")
