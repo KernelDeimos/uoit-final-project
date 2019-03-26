@@ -147,7 +147,7 @@ type BroadcastQueue struct {
 }
 
 func (rq BroadcastQueue) Bind(destination interp_a.HybridEvaluator) {
-	destination.AddOperation("broadcast", rq.OpEnqueue)
+	destination.AddOperation("enque", rq.OpEnqueue)
 	destination.AddOperation("block", rq.OpDequeueBlk)
 }
 
