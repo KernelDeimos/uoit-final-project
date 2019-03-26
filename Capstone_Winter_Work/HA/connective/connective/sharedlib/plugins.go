@@ -311,7 +311,8 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 		})
 		mutexDeviceList.Unlock()
 
-		return nil, nil
+		// Report HA/Connective's internal UUID
+		return []interface{}{deviceUUID}, nil
 	})}) // geez this is starting to look like Javascript
 	if err != nil {
 		return nil, err
