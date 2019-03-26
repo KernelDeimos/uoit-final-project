@@ -167,6 +167,10 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			}
 		}
 
+		// Channels for cleanup messages
+		stopPropertyUpdateQueue := make(chan struct{})
+		// stopEventQueue := make(chan struct{})
+
 		// Create device node object
 		deviceNode := interp_a.InterpreterFactoryA{}.MakeEmpty()
 
@@ -179,6 +183,40 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 		// --- device node operation to get user-defined meta
 		deviceNode.AddOperation("get-meta", func(
 			args []interface{}) ([]interface{}, error) {
+			return []interface{}{usermeta}, nil
+		})
+
+		// --- device node operation to close queues
+		deviceNode.AddOperation("unlink", func(
+			args []interface{}) ([]interface{}, error) {
+
+			mutexDeviceList.RLock()
+
+			var index int
+			var found bool
+			for i := 0; i < len(deviceList); i++ {
+				if deviceList[i].InternalID == deviceUUID {
+					index = i
+					found = true
+				}
+			}
+
+			mutexDeviceList.RUnlock()
+
+			if !found {
+				return nil, errors.New(
+					"device list entry for `" + deviceUUID + "` not found")
+			}
+
+			mutexDeviceList.Lock()
+			defer mutexDeviceList.Unlock()
+
+			// Send signals to stop background operations
+			stopPropertyUpdateQueue <- struct{}{}
+
+			// Remove device from the device list
+			deviceList = append(deviceList[:index], deviceList[index+1:]...)
+
 			return []interface{}{usermeta}, nil
 		})
 
@@ -253,12 +291,32 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 				<-time.After(20 * time.Second)
 			}
 			for {
+				// Result goes in this channel after "update-queue block"
+				resultFromUpdateQueue := make(chan []interface{})
+				// Signal goes in this channel if "update-queue block" fails
+				tryAgainFromUpdateQueue := make(chan struct{})
+
 				// Perform blocking wait for update queue event
-				result, err := deviceNode.OpEvaluate(
-					[]interface{}{"update-queue", "block"})
-				if err != nil {
-					handleErrorInHere(err)
+				go func() {
+					result, err := deviceNode.OpEvaluate(
+						[]interface{}{"update-queue", "block"})
+					if err != nil {
+						handleErrorInHere(err)
+						tryAgainFromUpdateQueue <- struct{}{}
+					}
+					resultFromUpdateQueue <- result
+				}()
+
+				var result []interface{}
+
+				select {
+				case result = <-resultFromUpdateQueue:
+				case <-tryAgainFromUpdateQueue:
+					// Try "update-queue block" again
 					continue
+				case <-stopPropertyUpdateQueue:
+					// Stop making requests to "update-queue block"
+					return
 				}
 
 				if len(result) < 1 {
@@ -343,6 +401,41 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	/*
+		// Invoke "set" (:) operation to add add-device operation to operation
+		// Usage: add-device <Mozilla definition> <user-defined meta information>
+		_, err = op([]interface{}{":", "unlink-device", interp_a.Operation(func(
+			args []interface{}) ([]interface{}, error) {
+			//::gen verify-args unlink-device mozmeta interface{} usermeta interface{} externid string
+			if len(args) < 3 {
+				return nil, errors.New("unlink-device requires at least 3 arguments")
+			}
+
+			var mozmeta interface{}
+			var usermeta interface{}
+			var externid string
+			{
+				var ok bool
+				mozmeta, ok = args[0].(interface{})
+				if !ok {
+					return nil, errors.New("unlink-device: argument 0: mozmeta; must be type interface{}")
+				}
+				usermeta, ok = args[1].(interface{})
+				if !ok {
+					return nil, errors.New("unlink-device: argument 1: usermeta; must be type interface{}")
+				}
+				externid, ok = args[2].(string)
+				if !ok {
+					return nil, errors.New("unlink-device: argument 2: externid; must be type string")
+				}
+			}
+			//::end
+			})}
+		if err != nil {
+			return nil, err
+		}
+	*/
 
 	return nil, nil
 }
