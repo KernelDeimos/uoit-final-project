@@ -19,12 +19,13 @@ ll = new_ll("../connective/connective/sharedlib/elconn.so")
 
 class PackageEventThread(Thread):
     def __init__(self, connective):
+        Thread.__init__(self)
         self.connective = connective
     def run(self):
-        config = self.connective.runs('hub events new-package block',
+        config = self.connective.runs('events new-package block',
             tolist=True)
         package_name = config['packaged_id']
-        for command in config['commands']
+        for command in config['commands']:
             id = "%s-%s" % (command, package_name)
             cmd = config['commands'][command]
             try:
@@ -55,7 +56,7 @@ def main():
     connective.runs(": heartbeats (@ directory)")
 
     # Initialize event queue directory
-    connective.runs(": events (@ directory")
+    connective.runs(": events (@ directory)")
     connective.runs("events : new-package (@ requests)")
 
     # Iniitalize IoT Data Structures
@@ -71,10 +72,10 @@ def main():
         print("Executing process "+name+" with command "+str(cmd))
 
         # re-write attributes in cmd to include remote address and app id
-        for x in range(len(cmd)):
-            cmd[x] = cmd[x].replace('<id>', id)
+        for x in range(len(cmd[1])):
+            cmd[1][x] = cmd[1][x].replace('<id>', id)
             # TODO: this address is currently hard-coded
-            cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3111")
+            cmd[1][x] = cmd[1][x].replace('<remote>', "http://127.0.0.1:3111")
 
         print("exe: ",cmd)
 
@@ -96,7 +97,7 @@ def main():
     print("Initializing main loop")
     while True:
         # TODO: Confirm System State According to Configuration
-        #for proc in processes:
+        for proc in processes:
             status = proc.GetStatus()
             if status is not None:
                 recover.append(proc)

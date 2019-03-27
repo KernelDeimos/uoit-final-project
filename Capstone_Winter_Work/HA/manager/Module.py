@@ -29,13 +29,13 @@ class Module:
         self.cmd = cmd
 
         if not package:
-            if cmd[0] === 'exec':
+            if cmd[0] == 'exec':
                 p = subprocess.Popen(cmd[1], stdout=subprocess.PIPE, universal_newlines=True)
                 self.process = p
             else:
                 raise CommandNotRecognized
         else:
-            if cmd[0] === 'docker':
+            if cmd[0] == 'docker':
                 image_path = os.path.join(BASE_PATH, package_name, cmd[1])
                 load_command = ['docker', 'load', image_path]
                 docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
