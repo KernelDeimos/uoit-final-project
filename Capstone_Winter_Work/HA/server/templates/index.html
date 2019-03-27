@@ -401,7 +401,9 @@ $(document).ready(function() {
 				console.log(data);
 				response = JSON.parse(data);
 				console.log(response["value"]);
-				button.siblings('.read-value-display').val(response["value"]);
+				var now = new Date()
+				var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+				button.siblings('.read-value-display').val(response["value"]+" ("+time+")");
 			}
 		})
 
