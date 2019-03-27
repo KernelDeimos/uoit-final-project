@@ -188,7 +188,7 @@ $(document).ready(function() {
 			data: data,
 			success: function(data) {
 				alert("Triggered "+action+" for "+target+": "+data);
-				document.getElementById(alert_id).html();
+				document.getElementById(alert_id).innerHTML = "Performed "+action+" on "+target+" successfully";
 			}
 		})
 
