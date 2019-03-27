@@ -24,6 +24,8 @@ class CommandNotRecognized(Error):
 class Module:
 
     def __init__(self, name, cmd, linebuffer, package=False, package_name=""):
+        # TODO: CLI arg variable replacement for packages
+        #       (right now only happens for internal components)
         self.name = name
         self.linebuffer = linebuffer
         self.cmd = cmd
@@ -39,18 +41,27 @@ class Module:
         else:
             if cmd[0] == 'docker':
                 image_path = os.path.join(BASE_PATH, package_name, cmd[1])
-                load_command = ['docker', 'load', image_path]
+
+                # Docker load
+                load_command = ['./loader', image_path]
                 docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
-                returncode = p.wait()
-                if not returncode == 0:
-                    command = ['docker', 'run', cmd[2]]
-                    for arg in cmd[3]:
-                        run_command.append(arg)
+                returncode = docker_load.wait()
+                if returncode == 0:
+
+                    # Docker run
+                    run_command = ['docker', 'run', cmd[2]]
+                    # === Currently Unsupported === #
+                    # # Add CLI arguments from package manifest
+                    # for arg in cmd[3]:
+                    #     run_command.append(arg)
                     p = subprocess.Popen(run_command, stdout=subprocess.PIPE, universal_newlines=True)
                     self.process = p
+                else:
+                    raise Exception('docker load failed')
             else:
                 raise CommandNotRecongized
 
+        p = self.process
         t = Thread(target=reader,args=(p.stdout,linebuffer))
         t.daemon=True
         t.start()
@@ -70,15 +81,11 @@ class Module:
         else:
             if cmd[0] == 'docker':
                 image_path = os.path.join(BASE_PATH, package_name, cmd[1])
-                load_command = ['docker', 'load', image_path]
-                docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
-                returncode = p.wait()
-                if not returncode == 0:
-                    command = ['docker', 'run', cmd[2]]
-                    for arg in cmd[3]:
-                        run_command.append(arg)
-                    p = subprocess.Popen(run_command, stdout=subprocess.PIPE, universal_newlines=True)
-                    self.process = p
+                #load_command = ['docker', 'load', image_path]
+                #docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
+                #returncode = p.wait()
+                if True: # not returncode == 0:
+                    print("!!! Restart not implemented for Docker yet")
             else:
                 raise CommandNotRecongized
 
@@ -101,15 +108,11 @@ class Module:
         else:
             if cmd[0] == 'docker':
                 image_path = os.path.join(BASE_PATH, package_name, cmd[1])
-                load_command = ['docker', 'load', image_path]
-                docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
-                returncode = p.wait()
-                if not returncode == 0:
-                    command = ['docker', 'run', cmd[2]]
-                    for arg in cmd[3]:
-                        run_command.append(arg)
-                    p = subprocess.Popen(run_command, stdout=subprocess.PIPE, universal_newlines=True)
-                    self.process = p
+                #load_command = ['./loader', image_path]
+                #docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
+                #returncode = docker_load.wait()
+                if True: # not returncode == 0:
+                    print("!!! Reinit not implemented for Docker yet")
             else:
                 raise CommandNotRecongized
 

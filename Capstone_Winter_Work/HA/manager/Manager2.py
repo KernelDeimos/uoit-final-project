@@ -2,7 +2,7 @@
 import yaml
 import time
 import json
-from Module import Module
+from Module import Module, CommandNotRecognized
 from bindings import new_ll, new_interpreter
 from threading import Thread
 
@@ -24,10 +24,15 @@ class PackageEventThread(Thread):
     def run(self):
         config = self.connective.runs('events new-package block',
             tolist=True)
-        package_name = config['packaged_id']
+        config = config[0]
+        package_name = config['package_id']
         for command in config['commands']:
             id = "%s-%s" % (command, package_name)
-            cmd = config['commands'][command]
+            cmd = config['commands'][command]['cmd']
+            print("*** Loading package module: " + id)
+            # Add data structures for process management
+            # TODO(eric): Update when parameter binding is added to HA/Connective
+            self.connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
             try:
                 process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
                 processes.append(process)
@@ -129,7 +134,7 @@ def main():
                 break
 
         # TODO: Validate Receipts
-        print("Validating Receipts (TODO)")
+        print("Validating Receipts")
         while True:
             if receipt_list:
                 #print(receipt_list.pop(0))

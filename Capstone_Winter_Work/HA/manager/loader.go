@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"exec"
-	"io"
-	"ioutil"
 	"github.com/sirupsen/logrus"
+	"io"
+	"io/ioutil"
+	"os"
+	"os/exec"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		logrus.Fatal("oof")
 	}
 	args := []string{"load"}
-	exeCmd := exec.Command("docker", args)
+	exeCmd := exec.Command("docker", args...)
 
 	var a *io.PipeReader
 	var b *io.PipeWriter
@@ -21,7 +21,7 @@ func main() {
 
 	data, err := ioutil.ReadFile(os.Args[1])
 	if err != nil {
-		logrus.Fatal(startErr)
+		logrus.Fatal(err)
 	}
 
 	exeCmd.Stdin = a
@@ -32,12 +32,17 @@ func main() {
 		logrus.Fatal(startErr)
 	}
 
-	//
+	go func() {
+		_, err = b.Write(data)
+		if err != nil {
+			logrus.Fatal(err)
+		}
+		b.Close()
+	}()
 
-	err := exeCmd.Wait()
+	err = exeCmd.Wait()
 	if err != nil {
 		logrus.Fatal(startErr)
 	}
 }
-
 
