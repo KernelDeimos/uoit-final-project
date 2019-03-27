@@ -157,7 +157,7 @@ def setup_package():
 			# TODO: Add package instructions to jobs list
 
 			# Inform subscriber about the new package
-			connective.runl(["hub", "events", "new-package", config])
+			connective.runl(["hub", "events", "new-package", "enque", config])
 
 			return redirect('/packages')
 		except Exception as exc:
