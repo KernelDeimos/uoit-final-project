@@ -7,9 +7,10 @@
 			<div class="col-lg-3 px-0">
 				<div class="nav flex-column nav-pills tabs-packages" id="tabs-package-{{ package['package_id'] }}" role="tablist" aria-orientation="vertical">
 					<a class="nav-item nav-link rounded-0 active" id="p-info-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-info-{{ package['package_id'] }}" role="tab" aria-controls="p-info-{{ package['package_id'] }}" aria-selected="true">Meta</a>
-					<a class="nav-item nav-link rounded-0" id="p-cmd-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package['package_id'] }}" aria-selected="true">Commands</a>
-					<a class="nav-item nav-link rounded-0" id="p-app-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-app-{{ package['package_id'] }}" role="tab" aria-controls="p-app-{{ package['package_id'] }}" aria-selected="true">Applications</a>
-					<a class="nav-item nav-link rounded-0" id="p-binding-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package['package_id'] }}" role="tab" aria-controls="p-binding-{{ package['package_id'] }}" aria-selected="true">Bindings</a>
+					<a class="nav-item nav-link rounded-0" id="p-cmd-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package['package_id'] }}" aria-selected="false">Commands</a>
+					<a class="nav-item nav-link rounded-0" id="p-app-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-app-{{ package['package_id'] }}" role="tab" aria-controls="p-app-{{ package['package_id'] }}" aria-selected="false">Applications</a>
+					<a class="nav-item nav-link rounded-0" id="p-binding-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package['package_id'] }}" role="tab" aria-controls="p-binding-{{ package['package_id'] }}" aria-selected="false">Bindings</a>
+					<a class="nav-item nav-link rounded-0" id="p-delete-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-delete-{{ package['package_id'] }}" role="tab" aria-controls="p-binding-{{ package['package_id'] }} aria-selected="false">Remove</a>
 				</div>
 			</div>
 			<div class="col-lg-9">
@@ -41,6 +42,11 @@
 							<li>{{ binding }}</li>
 						{% endfor %}
 						</ul>
+					</div>
+					<div class="tab-pane card-body text-center fade" id="p-delete-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-delete-tab-{{ package['package_id'] }}">
+						<h5>This will remove the package permanently</h5>
+						<p>Are you sure you wish to continue?</p>
+						<a class="btn btn-danger text-light" href="/packages/remove/{{ package['package_id'] }}">Continue</a>
 					</div>
 				</div>
 			</div>

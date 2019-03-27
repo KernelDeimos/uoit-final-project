@@ -22,6 +22,7 @@
 					{% for property in device['moz_definition']['properties'] %}
 						<span>{{ property|title }}: {{ device['moz_definition']['properties'][property]['description'] }}</span><br>
 						<div class="container-fluid">
+							<div class="alert alert-
 							<div class="form-group form-row">
 								<input type="text" class="col-7 form-control read-value-display" readonly value="--"/>
 								<button type="button" class="col-4 offset-1 btn btn-warning text-light submit-read" data-target="{{ device["internal_id"] }}" data-property="{{ property }}">Read</button>
@@ -40,7 +41,7 @@
 						<div class="container-fluid">
 							<div class="form-group form-row">
 								<input type="text" class="col-7 form-control" readonly value="{{ action }}">
-								<button type="button" class="col-4 offset-1 btn btn-warning text-light">Trigger</button>
+								<button type="button" class="col-4 offset-1 btn btn-warning text-light action-trigger" data-target="{{ device["internal_id"] }}" data-property="{{ action }}">Trigger</button>
 							</div>
 						</div>
 					{% endfor %}
