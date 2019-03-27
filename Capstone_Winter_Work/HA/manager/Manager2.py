@@ -53,7 +53,7 @@ def main():
             cmd[x] = cmd[x].replace('<id>', id)
             # TODO: this address is currently hard-coded
             cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3111")
-        
+
         print("exe: ",cmd)
 
         # Add data structures for process management
@@ -61,15 +61,19 @@ def main():
         connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
 
         # Start Process
-        process = Module(id, cmd, linebuffer)
-        processes.append(process)
-    
+	try:
+	        process = Module(id, cmd, linebuffer)
+	        processes.append(process)
+	except CommandNotRecognized:
+		# TODO: Handle this
+		print("Command not recognized")
+
 
     # Start Main Loop
     print("Initializing main loop")
     while True:
         # TODO: Confirm System State According to Configuration
-        for proc in processes:
+        #for proc in processes:
             status = proc.GetStatus()
             if status is not None:
                 recover.append(proc)
@@ -85,6 +89,20 @@ def main():
 
             # TODO: act on result
             print(int(result[0]))
+
+
+	# TODO: Load package docker
+	docker = False
+	if docker:
+		cmd = task['cmd']
+		name = task['name']
+		package_name = task['package_name']
+		try:
+			process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
+			processes.append(process)
+		except CommandNotRecognized:
+			#TODO: Handle this
+			print("Command not recognized")
 
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section
