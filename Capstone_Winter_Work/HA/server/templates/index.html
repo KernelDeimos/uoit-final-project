@@ -117,42 +117,48 @@
 					<div class="card-header bg-success text-light">
 						{{ name }}
 					</div><!-- .card-header -->
-					<div>
-						<div class="nav nav-tabs" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist">
-							<a class="nav-item nav-link active" id="p-info-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-info-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-info-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
-							<a class="nav-item nav-link" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
-							<a class="nav-item nav-link" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
-							<a class="nav-item nav-link" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
-						</div>
-						<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
-							<div class="tab-pane card-body fade show active" id="p-info-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package[name]['package_id'] }}">
-								<span>Creator: {{ package[name]['meta']['creator'] }}</span><br>
-								<span>Last Modified: {{ package[name]['meta']['last modified'] }}</span><br>
-								<span>Description: {{ package[name]['meta']['description'] }}</span><br>
-							</div>
-							<div class="tab-pane card-body fade" id="p-cmd-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package[name]['package_id'] }}">
-								<ul>
-								{% for command in package[name]['commands'] %}
-									<li>{{ command }}</li>
-								{% endfor %}
-								</ul>
-							</div>
-							<div class="tab-pane card-body fade" id="p-app-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package[name]['package_id'] }}">
-								<ul>
-								{% for application in package[name]['applications'] %}
-									<li>{{ application }}</li>
-								{% endfor %}
-								</ul>
-							</div>
-							<div class="tab-pane card-body fade" id="p-binding-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package[name]['package_id'] }}">
-								<ul>
-								{% for binding in package[name]['bindings'] %}
-									<li>{{ binding }}</li>
-								{% endfor %}
-								</ul>
+					<div class="container-fluid"><div class="row">
+						<div class="col-lg-3 px-0">
+							<div class="nav flex-column nav-pills tabs-packages" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist" aria-orientation="vertical">
+								<a class="nav-item nav-link rounded-0 active" id="p-info-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-info-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-info-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
+								<a class="nav-item nav-link rounded-0" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
+								<a class="nav-item nav-link rounded-0" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
+								<a class="nav-item nav-link rounded-0" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
 							</div>
 						</div>
-					</div><!-- .card-body -->
+						<div class="col-lg-9">
+							<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
+								<div class="tab-pane card-body fade show active" id="p-info-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package[name]['package_id'] }}">
+									<ul>
+										<li>Creator: {{ package[name]['meta']['creator'] }}</li>
+										<li>Last Modified: {{ package[name]['meta']['last modified'] }}</li>
+										<li>Description: {{ package[name]['meta']['description'] }}</li>
+									</ul>
+								</div>
+								<div class="tab-pane card-body fade" id="p-cmd-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package[name]['package_id'] }}">
+									<ul>
+									{% for command in package[name]['commands'] %}
+										<li>{{ command }}</li>
+									{% endfor %}
+									</ul>
+								</div>
+								<div class="tab-pane card-body fade" id="p-app-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package[name]['package_id'] }}">
+									<ul>
+									{% for application in package[name]['applications'] %}
+										<li>{{ application }}</li>
+									{% endfor %}
+									</ul>
+								</div>
+								<div class="tab-pane card-body fade" id="p-binding-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package[name]['package_id'] }}">
+									<ul>
+									{% for binding in package[name]['bindings'] %}
+										<li>{{ binding }}</li>
+									{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div></div><!-- .card-body -->
 				</div><!-- .card -->
 					{% endfor %}
 				{% endfor %}
@@ -162,47 +168,51 @@
 					<div class="card-header bg-warning text-light">
 						{{ device['moz_definition']['name']|title }}	
 					</div>
-					<div>
-						<div class="nav nav-tabs" id="tabs-device-{{ device['internal_id'] }}" role="tablist">
-							<a class="nav-item nav-link active" id="d-info-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-info-{{ device['internal_id'] }}" role="tab" aria-controls="d-info-{{ device['internal_id'] }}" aria-selected="true">Info</a>
-							<a class="nav-item nav-link" id="d-property-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-property-{{ device['internal_id'] }}" role="tab" aria-controls="d-property-{{ device['internal_id'] }}" aria-selected="true">Properties</a>
-							<a class="nav-item nav-link" id="d-action-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-action-{{ device['internal_id'] }}" role="tab" aria-controls="d-action-{{ device['internal_id'] }}" aria-selected="true">Actions</a>
-						</div><!-- .nav-pills -->
-						<div class="tab-content" id="tabContent-device-{{ device['internal_id'] }}">
-							<div class="tab-pane card-body fade show active" id="d-info-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-info-tab-{{ device['internal_id'] }}">
-								<span>Internal UUID: {{ device['internal_id'] }}</span><br>
-								<span>Manager ID: {{ device['manager_id'] }}</span><br>
-								<span>Description: {{ device['moz_definition']['description'] }}</span><br>
-							</div><!-- #info-tab -->
-							<div class="tab-pane card-body fade" id="d-property-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-property-tab--{{ device['internal_id'] }}">
-							{% for property in device['moz_definition']['properties'] %}
-								<span>{{ property|title }}: {{ device['moz_definition']['properties'][property]['description'] }}</span><br>
-								<div class="container-fluid">
-									<div class="form-group form-row">
-										<input type="text" class="col-7 form-control read-value-display" readonly value="--"/>
-										<button type="button" class="col-4 offset-1 btn btn-primary submit-read" data-target="{{ device["internal_id"] }}" data-property="{{ property }}">Read</button>
+					<div class="container-fluid"><div class="row">
+						<div class="col-lg-3 px-0">
+							<div class="nav flex-column nav-pills tabs-devices" id="tabs-device-{{ device['internal_id'] }}" role="tablist">
+								<a class="nav-item nav-link rounded-0 active" id="d-info-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-info-{{ device['internal_id'] }}" role="tab" aria-controls="d-info-{{ device['internal_id'] }}" aria-selected="true">Info</a>
+								<a class="nav-item nav-link rounded-0" id="d-property-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-property-{{ device['internal_id'] }}" role="tab" aria-controls="d-property-{{ device['internal_id'] }}" aria-selected="true">Properties</a>
+								<a class="nav-item nav-link rounded-0" id="d-action-tab-{{ device['internal_id'] }}" data-toggle="tab" href="#d-action-{{ device['internal_id'] }}" role="tab" aria-controls="d-action-{{ device['internal_id'] }}" aria-selected="true">Actions</a>
+							</div><!-- .nav-pills -->
+						</div><!-- .col-lg-3 -->
+						<div class="col-lg-9">
+							<div class="tab-content" id="tabContent-device-{{ device['internal_id'] }}">
+								<div class="tab-pane card-body fade show active" id="d-info-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-info-tab-{{ device['internal_id'] }}">
+									<span>Internal UUID: {{ device['internal_id'] }}</span><br>
+									<span>Manager ID: {{ device['manager_id'] }}</span><br>
+									<span>Description: {{ device['moz_definition']['description'] }}</span><br>
+								</div><!-- #info-tab -->
+								<div class="tab-pane card-body fade" id="d-property-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-property-tab--{{ device['internal_id'] }}">
+								{% for property in device['moz_definition']['properties'] %}
+									<span>{{ property|title }}: {{ device['moz_definition']['properties'][property]['description'] }}</span><br>
+									<div class="container-fluid">
+										<div class="form-group form-row">
+											<input type="text" class="col-7 form-control read-value-display" readonly value="--"/>
+											<button type="button" class="col-4 offset-1 btn btn-warning text-light submit-read" data-target="{{ device["internal_id"] }}" data-property="{{ property }}">Read</button>
+										</div>
+										{% if device['moz_definition']['properties'][property]['readOnly'] == False %}
+										<div class="form-group form-row">
+											<input type="text" class="col-7 form-control" />
+											<button type="button" class="col-4 offset-1 btn btn-warning text-light">Write</button>
+										</div>
+										{% endif %}
 									</div>
-									{% if device['moz_definition']['properties'][property]['readOnly'] == False %}
-									<div class="form-group form-row">
-										<input type="text" class="col-7 form-control" />
-										<button type="button" class="col-4 offset-1 btn btn-primary">Write</button>
+								{% endfor %}
+								</div><!-- #property-tab -->
+								<div class="tab-pane card-body fade" id="d-action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-action-tab-{{ device['internal_id'] }}">
+								{% for action in device['moz_definition']['actions'] %}
+									<div class="container-fluid">
+										<div class="form-group form-row">
+											<input type="text" class="col-7 form-control" readonly value="{{ action }}">
+											<button type="button" class="col-4 offset-1 btn btn-warning text-light">Trigger</button>
+										</div>
 									</div>
-									{% endif %}
+								{% endfor %}
 								</div>
-							{% endfor %}
-							</div><!-- #property-tab -->
-							<div class="tab-pane card-body fade" id="d-action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-action-tab-{{ device['internal_id'] }}">
-							{% for action in device['moz_definition']['actions'] %}
-								<div class="container-fluid">
-									<div class="form-group form-row">
-										<input type="text" class="col-7 form-control" readonly value="{{ action }}">
-										<button type="button" class="col-4 offset-1 btn btn-primary">Trigger</button>
-									</div>
-								</div>
-							{% endfor %}
-							</div>
-						</div><!-- .tab-content -->
-					</div><!-- .card-body -->
+							</div><!-- .tab-content -->
+						</div><!-- .col-lg-9 -->
+					</div></div><!-- .card-body -->
 				</div><!-- .card -->
 				{% endfor %}
 			</div><!-- .masonry -->
@@ -353,11 +363,28 @@ a[data-toggle="collapse"] {
 	column-count: 3;
 	column-gap: 1em;
 }
+@media (max-width: 768px) {
+	.masonry {
+		column-count: 1;
+	}
+}
+@media (max-width: 1200px) {
+	.masonry {
+		column-count: 2;
+	}
+}
 
 .card {
 	display: inline-block;
 	margin: 0 0 1em;
 	width: 100%;
+}
+
+.tabs-packages .nav-link.active {
+	background: #45B85E!important;
+}
+.tabs-devices .nav-link.active {
+	background: #FFCE3D!important;
 }
 </style>
 
