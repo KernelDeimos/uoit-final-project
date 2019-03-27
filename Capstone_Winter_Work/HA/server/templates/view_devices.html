@@ -9,6 +9,12 @@
 			
 		<ul class="list-unstyled component">
 			<li>
+                                <a href="/">
+                                        <i class="fas fa-home"></i>
+                                        Home
+                                </a>
+                        </li>
+			<li>
 				<a href="#packageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 					<i class="fas fa-box"></i>
 					Packages
@@ -20,16 +26,6 @@
 					<li>
 						<a href="/packages/add">Add Package</a>
 					</li>
-					<hr>
-					<p>Packages</p>
-					{% for package in packages %}
-					<li>
-						{% for name in package %}
-						<a href="/packages/{{ name }}">{{ name }}</a>
-						{%endfor%}
-					</li>
-					{% endfor %}
-					<hr>
 				</ul>
 			</li>
 			<li>
@@ -80,18 +76,6 @@
 					<li>
 						<a href="/macros/add">Add Macro</a>
 					</li>
-					<hr>
-					<p>Current Macros</p>
-					{% if macros %}
-					<li>
-						<!-- TODO -->
-					</li>
-					{% else %}
-					<li>
-						<span>No Macros Found</span>
-					</li>
-					{% endif %}
-					<hr>
 				</ul>
 			</li>
 		</ul>
