@@ -155,7 +155,9 @@ def setup_package():
 					return str(exc)
 
 			# TODO: Add package instructions to jobs list
-			# TODO: Add package specification to packages.yml
+
+			# Inform subscriber about the new package
+			connective.runl(["hub", "events", "new-package", config])
 
 			return redirect('/packages')
 		except Exception as exc:
