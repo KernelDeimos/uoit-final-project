@@ -55,8 +55,27 @@ class Module:
         self.thread = t
 
     def Restart(self):
-        p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, universal_newlines=True)
-        self.process = p
+
+        if not package:
+            if cmd[0] == 'exec':
+                p = subprocess.Popen(cmd[1], stdout=subprocess.PIPE, universal_newlines=True)
+                self.process = p
+            else:
+                raise CommandNotRecognized
+        else:
+            if cmd[0] == 'docker':
+                image_path = os.path.join(BASE_PATH, package_name, cmd[1])
+                load_command = ['docker', 'load', image_path]
+                docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
+                returncode = p.wait()
+                if not returncode == 0:
+                    command = ['docker', 'run', cmd[2]]
+                    for arg in cmd[3]:
+                        run_command.append(arg)
+                    p = subprocess.Popen(run_command, stdout=subprocess.PIPE, universal_newlines=True)
+                    self.process = p
+            else:
+                raise CommandNotRecongized
 
         t = Thread(target=reader,args=(p.stdout,self.linebuffer))
         t.daemon=True
@@ -66,8 +85,26 @@ class Module:
     def ReInit(self, cmd):
         self.cmd = cmd
 
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-        self.process = p
+        if not package:
+            if cmd[0] == 'exec':
+                p = subprocess.Popen(cmd[1], stdout=subprocess.PIPE, universal_newlines=True)
+                self.process = p
+            else:
+                raise CommandNotRecognized
+        else:
+            if cmd[0] == 'docker':
+                image_path = os.path.join(BASE_PATH, package_name, cmd[1])
+                load_command = ['docker', 'load', image_path]
+                docker_load = subprocess.Popen(load_command, stdout=subprocess.PIPE, universal_newlines=True)
+                returncode = p.wait()
+                if not returncode == 0:
+                    command = ['docker', 'run', cmd[2]]
+                    for arg in cmd[3]:
+                        run_command.append(arg)
+                    p = subprocess.Popen(run_command, stdout=subprocess.PIPE, universal_newlines=True)
+                    self.process = p
+            else:
+                raise CommandNotRecongized
 
         t = Thread(target=reader,args=(p.stdout,self.linebuffer))
         t.daemon=True
