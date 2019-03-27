@@ -4,7 +4,7 @@
         <div class="row">
                 <div class="col-8">
                         {% if package %}
-                                {% for pack in package %}
+                                <!--{% for pack in package %}
                                 <table class="package-data-table table-striped table-hover">
                                         <tr>
                                                 <th>{{ pack }}</th>
@@ -55,7 +55,8 @@
                                                 </td>
                                         </tr>
                                 </table>
-                                {% endfor %}
+                                {% endfor %}-->
+				{{ package }}
                         {% else %}
                                 <h3>Package not found.</h3>
                         {% endif %}

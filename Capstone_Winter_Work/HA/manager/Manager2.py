@@ -4,6 +4,7 @@ import time
 import json
 from Module import Module
 from bindings import new_ll, new_interpreter
+from threading import Thread
 
 linebuffer = []
 receipt_list = []
@@ -15,6 +16,24 @@ config = {}
 
 # Import HA/Connective bindings
 ll = new_ll("../connective/connective/sharedlib/elconn.so")
+
+class PackageEventThread(Thread):
+    def __init__(self, connective):
+        Thread.__init__(self)
+        self.connective = connective
+    def run(self):
+        config = self.connective.runs('events new-package block',
+            tolist=True)
+        package_name = config['packaged_id']
+        for command in config['commands']:
+            id = "%s-%s" % (command, package_name)
+            cmd = config['commands'][command]
+            try:
+                process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
+                processes.append(process)
+            except CommandNotRecognized:
+                #TODO: Handle this
+                print("Command not recognized")
 
 # Main Loop
 def main():
@@ -37,7 +56,7 @@ def main():
     connective.runs(": heartbeats (@ directory)")
 
     # Initialize event queue directory
-    connective.runs(": events (@ directory")
+    connective.runs(": events (@ directory)")
     connective.runs("events : new-package (@ requests)")
 
     # Iniitalize IoT Data Structures
@@ -53,10 +72,10 @@ def main():
         print("Executing process "+name+" with command "+str(cmd))
 
         # re-write attributes in cmd to include remote address and app id
-        for x in range(len(cmd)):
-            cmd[x] = cmd[x].replace('<id>', id)
+        for x in range(len(cmd[1])):
+            cmd[1][x] = cmd[1][x].replace('<id>', id)
             # TODO: this address is currently hard-coded
-            cmd[x] = cmd[x].replace('<remote>', "http://127.0.0.1:3111")
+            cmd[1][x] = cmd[1][x].replace('<remote>', "http://127.0.0.1:3111")
 
         print("exe: ",cmd)
 
@@ -65,19 +84,20 @@ def main():
         connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
 
         # Start Process
-    try:
+        try:
             process = Module(id, cmd, linebuffer)
             processes.append(process)
-    except CommandNotRecognized:
-        # TODO: Handle this
-        print("Command not recognized")
+        except CommandNotRecognized:
+            # TODO: Handle this
+            print("Command not recognized")
 
+    doNotCollect200 = PackageEventThread(connective).start()
 
     # Start Main Loop
     print("Initializing main loop")
     while True:
         # TODO: Confirm System State According to Configuration
-        #for proc in processes:
+        for proc in processes:
             status = proc.GetStatus()
             if status is not None:
                 recover.append(proc)
@@ -93,22 +113,6 @@ def main():
 
             # TODO: act on result
             print(int(result[0]))
-
-
-        # TODO: Load package docker
-        docker = False
-        if docker:
-            config = []
-            package_name = config['packaged_id']
-            for command in config['commands']
-                id = "%s-%s" % (command, package_name)
-                cmd = config['commands'][command]
-                try:
-                    process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
-                    processes.append(process)
-                except CommandNotRecognized:
-                    #TODO: Handle this
-                    print("Command not recognized")
 
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section

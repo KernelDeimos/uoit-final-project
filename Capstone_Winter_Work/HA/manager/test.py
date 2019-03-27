@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 from time import sleep
-import numpy as np
 import sys
 import json
 
@@ -30,7 +29,7 @@ def main():
         #            })
         # sys.stdout.write(receipt+"\n")
         # sys.stdout.flush()
-        connective.runs(f"heartbeats {arg_id} beat")
+        connective.runs("heartbeats {arg_id} beat")
         sleep(5)
         
     return

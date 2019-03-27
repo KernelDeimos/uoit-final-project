@@ -10,7 +10,10 @@
 		<div class="container-fluid">
 			<div class="masonry">
 				<!-- Create Package Cards -->
-				{% include 'package_cards.html' %}
+				<!--{% include 'package_cards.html' %}-->
+				{% for package in packages %}
+					{{ package }}
+				{% endfor %}
 				<!-- Create Device Cards -->
 				{% include 'device_cards.html' %}
 			</div><!-- .masonry -->
