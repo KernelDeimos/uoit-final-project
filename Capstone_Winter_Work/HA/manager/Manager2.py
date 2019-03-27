@@ -4,6 +4,7 @@ import time
 import json
 from Module import Module
 from bindings import new_ll, new_interpreter
+from threading import Thread
 
 linebuffer = []
 receipt_list = []
@@ -15,6 +16,23 @@ config = {}
 
 # Import HA/Connective bindings
 ll = new_ll("../connective/connective/sharedlib/elconn.so")
+
+class PackageEventThread(Thread):
+    def __init__(self, connective):
+        self.connective = connective
+    def run(self):
+        config = self.connective.runs('hub events new-package block',
+            tolist=True)
+        package_name = config['packaged_id']
+        for command in config['commands']
+            id = "%s-%s" % (command, package_name)
+            cmd = config['commands'][command]
+            try:
+                process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
+                processes.append(process)
+            except CommandNotRecognized:
+                #TODO: Handle this
+                print("Command not recognized")
 
 # Main Loop
 def main():
@@ -65,13 +83,14 @@ def main():
         connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
 
         # Start Process
-    try:
+        try:
             process = Module(id, cmd, linebuffer)
             processes.append(process)
-    except CommandNotRecognized:
-        # TODO: Handle this
-        print("Command not recognized")
+        except CommandNotRecognized:
+            # TODO: Handle this
+            print("Command not recognized")
 
+    doNotCollect200 = PackageEventThread(connective).start()
 
     # Start Main Loop
     print("Initializing main loop")
@@ -93,22 +112,6 @@ def main():
 
             # TODO: act on result
             print(int(result[0]))
-
-
-        # TODO: Load package docker
-        docker = False
-        if docker:
-            config = []
-            package_name = config['packaged_id']
-            for command in config['commands']
-                id = "%s-%s" % (command, package_name)
-                cmd = config['commands'][command]
-                try:
-                    process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
-                    processes.append(process)
-                except CommandNotRecognized:
-                    #TODO: Handle this
-                    print("Command not recognized")
 
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section
