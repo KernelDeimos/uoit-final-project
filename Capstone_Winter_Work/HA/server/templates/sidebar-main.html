@@ -24,13 +24,19 @@
 				</li>
 				<hr>
 				<p>Packages</p>
-				{% for package in packages %}
-				<li>
-					{% for name in package %}
-					<a href="/packages/{{ name }}">{{ name }}</a>
-					{%endfor%}
-				</li>
-				{% endfor %}
+				{% if packages %}
+					{% for package in packages %}
+					<li>
+						{% for name in package %}
+						<a href="/packages/{{ name }}">{{ name }}</a>
+						{%endfor%}
+					</li>
+					{% endfor %}
+				{% else %}
+					<li>
+						<span>No Packages Found</span>
+					</li>
+				{% endif %}
 				<hr>
 			</ul>
 		</li>
