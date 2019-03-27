@@ -94,15 +94,17 @@ def main():
 	# TODO: Load package docker
 	docker = False
 	if docker:
-		cmd = task['cmd']
-		name = task['name']
-		package_name = task['package_name']
-		try:
-			process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
-			processes.append(process)
-		except CommandNotRecognized:
-			#TODO: Handle this
-			print("Command not recognized")
+		config = []
+		package_name = config['packaged_id']
+		for command in config['commands']
+			id = "%s-%s" % (command, package_name)
+			cmd = config['commands'][command]
+			try:
+				process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
+				processes.append(process)
+			except CommandNotRecognized:
+				#TODO: Handle this
+				print("Command not recognized")
 
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section
