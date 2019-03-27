@@ -39,11 +39,9 @@
 					{% endfor %}
 					</div><!-- #property-tab -->
 					<div class="tab-pane card-body fade" id="d-action-{{ device['internal_id'] }}" role="tabpanel" aria-labelledby="d-action-tab-{{ device['internal_id'] }}">
+						<div class="alert alert-warning" id="action-alert-{{ device["internal_id"] }}"></div>
 					{% for action in device['moz_definition']['actions'] %}
 						<div class="container-fluid">
-							<div class="alert alert-warning" id="action-alert-{{ device["internal_id"] }}">
-
-							</div>
 							<div class="form-group form-row">
 								<input type="text" class="col-7 form-control" readonly value="{{ action }}">
 								<button type="button" class="col-4 offset-1 btn btn-warning text-light action-trigger" data-target="{{ device["internal_id"] }}" data-action="{{ action }}">Trigger</button>
