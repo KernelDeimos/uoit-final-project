@@ -156,7 +156,7 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 			}
 
 			if found {
-				return []interface{}{deviceList[i].InternalID}, nil
+				return []interface{}{deviceList[index].InternalID}, nil
 			}
 		}
 
