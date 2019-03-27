@@ -1,16 +1,11 @@
-HVACTest:
-    package_id: "12345678"
-    meta:
-        creator: "Taylor Somann"
-        last modified: "March 26th, 2019"
-        description: "An example package specification"
-    commands: 
-        - "cmd"
-    applications:
-        - "example.py"
-        - "daemon.py"
-        - "monitor.py"
-    bindings:
-        - "directory"
-        - "list"
-        - "map"
+package_id: "devicemanager_0-1-0-fake"
+meta:
+    creator: "Taylor Somann"
+    last modified: "March 26th, 2019"
+    description: "Device management daemon"
+commands: 
+    broadcastclient:
+        cmd: ['docker', 'image.tar', 'pkg_broadcast_client', ['<id>', '<remote>']]
+applications:
+    - 'Broadcast Client'
+bindings: []

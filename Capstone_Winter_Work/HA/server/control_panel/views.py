@@ -259,16 +259,60 @@ def trigger_action():
 		return str(result)
 
 # View Macros
-@control_panel.route('/macros')
-def view_macros():
-	pass
+#@control_panel.route('/macros')
+#def view_macros():
+#	macros = os.listdir('./macros')
+#	macro_dict = {}
+#	for macro in macros:
+#		with open(macro, 'r')
 
 # Add Macro
-@control_panel.route('/macros/add')
-def add_macro():
-	pass
+#@control_panel.route('/macros/add', methods=["POST"])
+#def add_macro():
+#	macro_name = request.form["macro_name"]
+#	macro_content = request.form["macro_content"]
+#	macro_path = os.path.join("./macros", macro_name)
+#	with open(macro_path, "w") as stream:
+#		try:
+#			#TODO: write
+#			pass
+#		except Exception as exc:
+#			return render_template("error_template.html", exception=exc)
 
 # Remove Macro
-@control_panel.route('/macros/remove')
-def remove_macro():
-	pass
+#@control_panel.route('/macros/remove', methods=["POST"])
+#def remove_macro():
+#	macro_name = request.form["macro_name"]
+#	macro_path = os.path.join("./macros", macro_name)
+#	try:
+#		#TODO: remove
+#	except Exception as exc:
+#		return render_template("error_template.html", exception=exc)
+
+# Process Macro
+#@control_panel.route('/macros/read', methdos=['POST'])
+#def read_macro():
+#	if request.method == 'POST':
+#		macro = request.form['macro_name']
+#		macro_path = os.path.join("./macros", macro)
+#		with open(macro_path, 'r') as stream:
+#			try:
+#				macro_code = yaml.load(stream)
+#			except Exception as exc:
+#				return render_template("error_template.html", exception=exc)
+#		vars = {}
+#		response = []
+#		for command in macro_code:
+#			if command[0] == "read":
+#				target = command[1]
+#				property_ = command[2]
+#				var_name = command[3]
+#				result = connective.runl(
+#					'hub devices internal_registry'.split(' ') +
+#				[target, "properties", property_], tolist=True)
+#				vals[var_name}
+#			if command[0] == "print":
+#				var_name = command[1]
+#				response.append(vars[var_name])
+#			else:
+#				pass

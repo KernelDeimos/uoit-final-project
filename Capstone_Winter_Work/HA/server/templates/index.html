@@ -2,7 +2,7 @@
 
 <div class="wrapper">
 
-	{% include 'sidebar-main.html' %}
+	{% include 'sidebar-empty.html' %}
 
 	<div class="content dashboard" style="width: 100%">
 		{% include 'navbar.html' %}
@@ -10,10 +10,7 @@
 		<div class="container-fluid">
 			<div class="masonry">
 				<!-- Create Package Cards -->
-				<!--{% include 'package_cards.html' %}-->
-				{% for package in packages %}
-					{{ package }}
-				{% endfor %}
+				{% include 'package_cards.html' %}
 				<!-- Create Device Cards -->
 				{% include 'device_cards.html' %}
 			</div><!-- .masonry -->
