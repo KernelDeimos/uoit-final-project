@@ -27,6 +27,8 @@ class Module:
         self.name = name
         self.linebuffer = linebuffer
         self.cmd = cmd
+        self.package = package
+        self.package_name = package_name
 
         if not package:
             if cmd[0] == 'exec':
@@ -56,6 +58,9 @@ class Module:
 
     def Restart(self):
 
+        package = self.package
+        package_name = self.package_name
+
         if not package:
             if cmd[0] == 'exec':
                 p = subprocess.Popen(cmd[1], stdout=subprocess.PIPE, universal_newlines=True)
@@ -84,6 +89,8 @@ class Module:
 
     def ReInit(self, cmd):
         self.cmd = cmd
+        package = self.package
+        package_name = self.package_name
 
         if not package:
             if cmd[0] == 'exec':
