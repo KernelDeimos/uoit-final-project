@@ -144,6 +144,22 @@ func makePlugDevice(args []interface{}) ([]interface{}, error) {
 		}
 		//::end
 
+		// Check if external ID is already in use
+		{
+			var index int
+			var found bool
+			for i := 0; i < len(deviceList); i++ {
+				if deviceList[i].ManagerID == externid {
+					found = true
+					index = i
+				}
+			}
+
+			if found {
+				return []interface{}{deviceList[i].InternalID}, nil
+			}
+		}
+
 		// Create UUID for the device
 		deviceUUID := uuid.Must(uuid.NewV4()).String()
 		logrus.Debug("Device id will be:", deviceUUID)
