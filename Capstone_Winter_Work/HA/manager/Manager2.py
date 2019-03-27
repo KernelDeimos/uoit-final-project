@@ -65,12 +65,12 @@ def main():
         connective.runs("heartbeats : '"+id+"' (@ heartbeat-monitor 1s)")
 
         # Start Process
-	try:
-	        process = Module(id, cmd, linebuffer)
-	        processes.append(process)
-	except CommandNotRecognized:
-		# TODO: Handle this
-		print("Command not recognized")
+    try:
+            process = Module(id, cmd, linebuffer)
+            processes.append(process)
+    except CommandNotRecognized:
+        # TODO: Handle this
+        print("Command not recognized")
 
 
     # Start Main Loop
@@ -95,20 +95,20 @@ def main():
             print(int(result[0]))
 
 
-	# TODO: Load package docker
-	docker = False
-	if docker:
-		config = []
-		package_name = config['packaged_id']
-		for command in config['commands']
-			id = "%s-%s" % (command, package_name)
-			cmd = config['commands'][command]
-			try:
-				process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
-				processes.append(process)
-			except CommandNotRecognized:
-				#TODO: Handle this
-				print("Command not recognized")
+        # TODO: Load package docker
+        docker = False
+        if docker:
+            config = []
+            package_name = config['packaged_id']
+            for command in config['commands']
+                id = "%s-%s" % (command, package_name)
+                cmd = config['commands'][command]
+                try:
+                    process = Module(id, cmd, linebuffer, package=True, package_name=package_name)
+                    processes.append(process)
+                except CommandNotRecognized:
+                    #TODO: Handle this
+                    print("Command not recognized")
 
         # Read Current Receipts
         # TODO: Prevent getting stuck in this code section
