@@ -180,7 +180,7 @@ $(document).ready(function() {
 		console.log("Action: "+action)
 
 		data = {"target": target, "action": action}
-		alert = "#action-alert-"+target;
+		alert_id = "action-alert-"+target;
 
 		$.ajax({
 			method: "POST",
@@ -188,7 +188,7 @@ $(document).ready(function() {
 			data: data,
 			success: function(data) {
 				alert("Triggered "+action+" for "+target+": "+data);
-				$(alert).html();
+				document.getElementById(alert_id).html();
 			}
 		})
 
