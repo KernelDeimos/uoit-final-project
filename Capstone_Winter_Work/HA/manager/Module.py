@@ -57,7 +57,7 @@ class Module:
         self.thread = t
 
     def Restart(self):
-
+	cmd = self.cmd
         package = self.package
         package_name = self.package_name
 
