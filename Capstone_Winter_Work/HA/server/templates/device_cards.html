@@ -41,7 +41,7 @@
 						<div class="container-fluid">
 							<div class="form-group form-row">
 								<input type="text" class="col-7 form-control" readonly value="{{ action }}">
-								<button type="button" class="col-4 offset-1 btn btn-warning text-light action-trigger" data-target="{{ device["internal_id"] }}" data-property="{{ action }}">Trigger</button>
+								<button type="button" class="col-4 offset-1 btn btn-warning text-light action-trigger" data-target="{{ device["internal_id"] }}" data-action="{{ action }}">Trigger</button>
 							</div>
 						</div>
 					{% endfor %}
