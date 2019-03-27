@@ -36,6 +36,10 @@ def main():
     # Initialize Management Data Structures
     connective.runs(": heartbeats (@ directory)")
 
+    # Initialize event queue directory
+    connective.runs(": events (@ directory")
+    connective.runs("events : new-package (@ requests)")
+
     # Iniitalize IoT Data Structures
     connective.runs(": devices (@ directory)")
     connective.runs("include device ($ devices)")
