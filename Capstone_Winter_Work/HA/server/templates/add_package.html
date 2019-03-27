@@ -1,23 +1,29 @@
 {% include 'header.html' %}
 
-{% if error %}
-<div class="container">
-	<div class="row">
-		<div class="col-12">
-			<span style="color:red">{{ error }}</span>
-		</div>
+<div class="wrapper">
+
+	{% include 'sidebar-empty.html' %}
+
+	<div class="content dashboard" style="width: 100%">
+		{% include 'navbar.html' %}
+		
+			{% if error %}
+				<span style="color:red">{{ error }}</span>
+		{% endif %}
+
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST" action="/packages/add" enctype="multipart/form-data">
+						<input type="file" name="file">
+						<button type="submit" id="submitBtn">Submit</button>
+					</form>
+				</div><!-- .col -->
+			</div><!-- .row -->
+		</div><!-- .container -->
+
 	</div>
+	
 </div>
-{% endif %}
 
-<div class="container">
-	<div class="row">
-		<div class="col-12">
-			<form method="POST" action="/packages/add" enctype="multipart/form-data">
-				<input type="file" name="file">
-				<button type="submit" id="submitBtn">Submit</button>
-			</form>
-		</div><!-- .col -->
-	</div><!-- .row -->
-</div><!-- .container -->
-
+{% include 'footer.html' %}
