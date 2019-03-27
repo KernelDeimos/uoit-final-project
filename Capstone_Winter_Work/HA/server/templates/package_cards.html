@@ -1,0 +1,51 @@
+{% for package in packages %}
+	{% for name in package %}
+		<div class="card">
+			<div class="card-header bg-success text-light">
+				{{ name }}
+			</div><!-- .card-header -->
+			<div class="container-fluid"><div class="row">
+				<div class="col-lg-3 px-0">
+					<div class="nav flex-column nav-pills tabs-packages" id="tabs-package-{{ package[name]['package_id'] }}" role="tablist" aria-orientation="vertical">
+						<a class="nav-item nav-link rounded-0 active" id="p-info-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-info-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-info-{{ package[name]['package_id'] }}" aria-selected="true">Meta</a>
+						<a class="nav-item nav-link rounded-0" id="p-cmd-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package[name]['package_id'] }}" aria-selected="true">Commands</a>
+						<a class="nav-item nav-link rounded-0" id="p-app-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-app-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-app-{{ package[name]['package_id'] }}" aria-selected="true">Applications</a>
+						<a class="nav-item nav-link rounded-0" id="p-binding-tab-{{ package[name]['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package[name]['package_id'] }}" role="tab" aria-controls="p-binding-{{ package[name]['package_id'] }}" aria-selected="true">Bindings</a>
+					</div>
+				</div>
+				<div class="col-lg-9">
+					<div class="tab-content" id="tabContent-package-{{package[name]['package_id'] }}">
+						<div class="tab-pane card-body fade show active" id="p-info-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package[name]['package_id'] }}">
+							<ul>
+								<li>Creator: {{ package[name]['meta']['creator'] }}</li>
+								<li>Last Modified: {{ package[name]['meta']['last modified'] }}</li>
+								<li>Description: {{ package[name]['meta']['description'] }}</li>
+							</ul>
+						</div>
+						<div class="tab-pane card-body fade" id="p-cmd-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package[name]['package_id'] }}">
+							<ul>
+							{% for command in package[name]['commands'] %}
+								<li>{{ command }}</li>
+							{% endfor %}
+							</ul>
+						</div>
+						<div class="tab-pane card-body fade" id="p-app-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package[name]['package_id'] }}">
+							<ul>
+							{% for application in package[name]['applications'] %}
+								<li>{{ application }}</li>
+							{% endfor %}
+							</ul>
+						</div>
+						<div class="tab-pane card-body fade" id="p-binding-{{ package[name]['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package[name]['package_id'] }}">
+							<ul>
+							{% for binding in package[name]['bindings'] %}
+								<li>{{ binding }}</li>
+							{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div></div><!-- .card-body -->
+		</div><!-- .card -->
+	{% endfor %}
+{% endfor %}
