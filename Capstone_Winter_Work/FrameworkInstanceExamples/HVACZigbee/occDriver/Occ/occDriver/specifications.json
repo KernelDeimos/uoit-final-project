@@ -1,0 +1,25 @@
+{
+        "name": "Occupancy Sensor",
+        "description": "Generic specification for a device driver that detects occupancy",
+        "properties": {
+                "occupancy": {
+                        "title": "Occupancy",
+                        "type": "number",
+                        "unit": "body count",
+                        "readOnly": true,
+                        "description": "An environment occupancy counter"
+                }
+        },
+        "actions": {
+                "reboot": {
+                        "title": "Reboot",
+                        "description": "Reboot the device"
+                }
+        },
+        "events": {
+                "reboot": {
+                        "description": "Going down for reboot"
+                }
+        }
+}
+
