@@ -1,5 +1,0 @@
-{
-        "read occ": "python3 ./Occ/getOcc.py",
-	"reboot": "python3 ./Occ/reboot.py"
-}
-
