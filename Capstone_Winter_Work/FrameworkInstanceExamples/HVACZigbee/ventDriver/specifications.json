@@ -1,0 +1,36 @@
+{
+        "name": "Vent Actuator",
+        "description": "Specification of vent actuator node",
+        "properties": {
+                "ventStatus": {
+                        "title": "vent status",
+                        "type": "string",
+                        "readOnly": false,
+                        "description": "A vent opening actuator"
+                }
+        },
+        "actions": {
+		"toggle": {
+			"title": "Toggle",
+			"description": "Sets opposite status for vent"
+		},
+                "reboot": {
+                        "title": "Reboot",
+                        "description": "Reboot the device"
+                }
+        },
+        "events": {
+                "open": {
+                        "title": "Open",
+                        "description": "Opens the vent"
+                },
+                "close": {
+                        "title": "Close",
+                        "description": "Closes the vent"
+                },
+                "reboot": {
+                        "description": "Going down for reboot"
+                }
+        }
+}
+

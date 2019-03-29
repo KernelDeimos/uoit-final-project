@@ -1,0 +1,7 @@
+{
+        "read status": "python3 ./Occ/getOcc.py",
+	"open": "python3 -c "from Vent.actVent import VentMotor; vent = VentMotor(); vent.open()"",
+	"close": "python3 -c "from Vent.actVent import VentMotor; vent = VentMotor(); vent.close()",
+        "reboot": "python3 ./Occ/reboot.py"
+}
+
