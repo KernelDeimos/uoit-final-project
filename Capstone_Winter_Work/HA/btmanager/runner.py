@@ -41,7 +41,7 @@ connective = new_interpreter(ll)
 # the command "hub"
 ll.elconn_link(b"hub", connective.ii, remote_connective.ii)
 
-playListener = PlayActionListener("hub devices registry newdeviceid4 actions play block")
+playListener = PlayActionListener("hub devices registry "+arg_id+" actions play block")
 playListener.start()
         
 driver.confirmDevice()
