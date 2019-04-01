@@ -4,7 +4,7 @@ from time import sleep
 from threading import Thread
 
 # Import Bluetooth driver
-from BluetoothCombo import driver
+from BluetoothCombo import driver2 as driver
 
 # Import Connective bindings
 from bindings import new_ll, connect, new_interpreter
@@ -19,8 +19,11 @@ class DeviceActionListener(Thread):
             self.do(request)
 
 class PlayActionListener(DeviceActionListener):
+    def __init__(self, command, speaker):
+        DeviceActionListener.__init__(self, command)
+        self.speaker = speaker
     def do(self, request):
-        driver.Play()
+        self.speaker.playRandom()
 
 class PauseActionListener(DeviceActionListener):
     def do(self, request):
@@ -41,10 +44,14 @@ connective = new_interpreter(ll)
 # the command "hub"
 ll.elconn_link(b"hub", connective.ii, remote_connective.ii)
 
-playListener = PlayActionListener("hub devices registry "+arg_id+" actions play block")
-playListener.start()
-        
+driver.Connect()
 driver.confirmDevice()
+speaker = driver.Speaker()
+speaker.start()
+
+
+playListener = PlayActionListener("hub devices registry "+arg_id+" actions play block", speaker)
+playListener.start()
 
 while True:
     print("I'm still alive")
