@@ -16,4 +16,4 @@ def create_app(config_file):
 
 if __name__ == '__main__':
 	app = create_app('config.py') # Create application with config.py
-	app.run(debug=True) # Run Flask application
+	app.run(host='0.0.0.0', debug=True) # Run Flask application

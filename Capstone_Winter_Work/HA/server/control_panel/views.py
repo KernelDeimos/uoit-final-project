@@ -11,7 +11,7 @@ from bindings import new_ll, connect, new_interpreter
 ll = new_ll("../connective/connective/sharedlib/elconn.so")
 ll.elconn_init(1)
 # TODO: get Connective URL from configuration
-remote_connective = connect(ll, b"http://vps.ericdube.com:3111")
+remote_connective = connect(ll, b"http://127.0.0.1:3111")
 # remote_connective = connect(ll, b"http://127.0.0.1:3003")
 connective = new_interpreter(ll)
 # Allow messages to be send to remote interpreter by prefixing
@@ -148,6 +148,7 @@ def setup_package():
 			# Get Package instructions
 			package_dir = package.rsplit('.')[0]
 			config_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], package_dir, 'package.yml')
+			config = None
 			with open(config_dir, "r") as stream:
 				try:
 					config = yaml.load(stream)

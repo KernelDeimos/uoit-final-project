@@ -189,7 +189,10 @@ $(document).ready(function() {
 			success: function(data) {
 				document.getElementById(alert_id).innerHTML = "Performed "+action+" on "+target+" successfully";
 			}
-		})
+		}).fail(function(data) {
+			alert_id = "action-alert-"+target;
+			document.getElementById(alert_id).innerHTML = "Failed to perform "+action+". Received: "+data;
+		});
 
 	});
 
@@ -200,6 +203,7 @@ $(document).ready(function() {
 		var property = $(this).data('property');
 
 		data = {"target": target, "property": property}
+		alert_id = "property-alert-"+target
 
 		$.ajax({
 			method: "POST",
@@ -215,8 +219,12 @@ $(document).ready(function() {
 				var now = new Date()
 				var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
 				button.siblings('.read-value-display').val(response["value"]+" ("+time+")");
+				document.getElementById(alert_id).innerHTML = "Read "+property+" successfully.";
 			}
-		})
+		}).fail(function(data) {
+			alert_id = "property-alert-"+target;
+			document.getElementById(alert_id).innerHTML = "Failed to read "+property+". Received: "+data;
+		});
 
 	});
 
@@ -235,7 +243,10 @@ $(document).ready(function() {
 			success: function(data) {
 				document.getElementById(alert_id).innerHTML = "Change value of "+property+" of "+target+" to "+property;
 			}
-		})
+		}).fail(function(data) {
+			alert_id = "property-alert-"+target;
+			document.getElementById(alert_id).innerHTML = "Failed to write to "+property+". Received: "+data;
+		});
 
 	});
 
