@@ -46,7 +46,8 @@
 					<div class="tab-pane card-body text-center fade" id="p-delete-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-delete-tab-{{ package['package_id'] }}">
 						<h5>This will remove the package permanently</h5>
 						<p>Are you sure you wish to continue?</p>
-						<a class="btn btn-danger text-light" href="/packages/remove/{{ package['package_id'] }}">Continue</a>
+						<!--<a class="btn btn-danger text-light" href="/packages/remove/{{ package['package_id'] }}">Continue</a>-->
+						<a class="btn btn-disabled text-light"role="button" aria-disabled="true">Remove (Disabled for Demo)</a>
 					</div>
 				</div>
 			</div>
