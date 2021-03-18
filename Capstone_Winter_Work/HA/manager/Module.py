@@ -49,7 +49,7 @@ class Module:
                 if returncode == 0:
 
                     # Docker run
-                    run_command = ['docker', 'run', cmd[2]]
+                    run_command = ['docker', 'run', '--network', 'host', cmd[2]]
                     # === Currently Unsupported === #
                     # # Add CLI arguments from package manifest
                     # for arg in cmd[3]:

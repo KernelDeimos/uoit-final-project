@@ -130,6 +130,10 @@ class DeviceEventListener:
         del self.ipToKeyName[deviceIP]
         del self.deviceIPs[deviceIP]
         # TODO: Call connective to remove device
+        # Remove device via connective
+        result = self.connective.runl(
+                'hub devices internal_registry'.split(' ') +
+                [deviceUUID, 'unlink'], tolist=True)
 
 
 def launch_client(deviceEventListener):

@@ -81,6 +81,7 @@ def main():
             cmd[1][x] = cmd[1][x].replace('<id>', id)
             # TODO: this address is currently hard-coded
             cmd[1][x] = cmd[1][x].replace('<remote>', "http://127.0.0.1:3111")
+            #cmd[1][x] = cmd[1][x].replace('<remote>', "http://vps.ericdube.com:3111")
 
         print("exe: ",cmd)
 

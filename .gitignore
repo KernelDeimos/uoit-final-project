@@ -9,3 +9,6 @@ pyvenv.cfg
 
 awesomevirtualenvstuff/
 
+# These files are very large
+Capstone_Winter_Work/HA/server/packages/
+Capstone_Winter_Work/Packages/
